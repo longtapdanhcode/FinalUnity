@@ -36,6 +36,12 @@ namespace Vanguard.Graphics
         private float pulseAmount;
         private float pulseDecayRate;
 
+        public bool HighQualityBloom
+        {
+            get => bloom != null && bloom.highQualityFiltering.value;
+            set { if (bloom != null) bloom.highQualityFiltering.Override(value); }
+        }
+
         public bool PostProcessingEnabled
         {
             get => postProcessingEnabled;

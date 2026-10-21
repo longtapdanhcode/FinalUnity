@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49671f7784cd44df781669ab030f525f, type: 3}
+  m_Name: Card_Rare_HellfireSlash
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Cards.HellfireSlashCardSO
+  cardID: card_rare_hellfire_slash
+  cardName: Hellfire Slash
+  description: "\u0110\xF2n ch\xE9m thi\xEAu \u0111\u1ED1t m\u1EE5c ti\xEAu 10 DMG/gi\xE2y trong 3s (c\u1ED9ng d\u1ED3n t\u1ED1i \u0111a 3 l\u1EA7n)."
+  rarity: 1
+  icon: {fileID: 0}
+  burnDmgPerSec: 10
+  burnDuration: 3
+  maxStacks: 3

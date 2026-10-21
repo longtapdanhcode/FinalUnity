@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 957eeed62a04f4b9cb7bad9d2af6cd5c, type: 3}
+  m_Name: Card_Rare_Swiftblade
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Cards.StatUpgradeCardSO
+  cardID: rare_swiftblade
+  cardName: "L\u01B0\u1EE1i Ki\u1EBFm Th\u1EA7n T\u1ED1c"
+  description: "T\u0103ng 20% t\u1ED1c \u0111\u1ED9 \u0111\xE1nh."
+  rarity: 1
+  icon: {fileID: 0}
+  statType: 3
+  value: 0.2

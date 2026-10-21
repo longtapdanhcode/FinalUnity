@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf5d21bb7d394cd0954799f296d1ea9, type: 3}
+  m_Name: Card_Common_BloodMilk
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Cards.BloodMilkCardSO
+  cardID: card_common_blood_milk
+  cardName: Blood Milk
+  description: "H\u1ED3i ngay 30 HP v\xE0 t\u0103ng v\u0129nh vi\u1EC5n 20 HP t\u1ED1i \u0111a."
+  rarity: 0
+  icon: {fileID: 0}
+  maxHealthBonus: 20
+  healAmount: 30

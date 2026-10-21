@@ -18,7 +18,6 @@ namespace Vanguard.EditorTools
             EnsureFolder("Assets", "Prefabs");
             EnsureFolder("Assets/Prefabs", "Combat");
             EnsureFolder("Assets/Prefabs", "Enemies");
-            EnsureFolder("Assets", "Material");
             EnsureFolder("Assets", "Materials");
 
             // 2. Tạo Prefab ExplosionVFX (ParticleSystem nổ lửa nở bung nhanh 0.4s)
@@ -30,7 +29,7 @@ namespace Vanguard.EditorTools
             Material pMat = new Material(pShader);
             pMat.name = "M_Explosion_Particle";
             pMat.color = new Color(1f, 0.45f, 0f, 1f);
-            AssetDatabase.CreateAsset(pMat, "Assets/Material/M_Explosion_Particle.mat");
+            AssetDatabase.CreateAsset(pMat, "Assets/Materials/M_Explosion_Particle.mat");
 
             GameObject vfxGo = new GameObject("ExplosionVFX");
             ParticleSystem ps = vfxGo.AddComponent<ParticleSystem>();
@@ -94,10 +93,7 @@ namespace Vanguard.EditorTools
             huskMat.SetColor("_EmissionColor", new Color(1.8f, 0.35f, 0f, 1f));
 
             string matPath1 = "Assets/Materials/M_VolatileHusk.mat";
-            string matPath2 = "Assets/Material/M_VolatileHusk.mat";
             AssetDatabase.CreateAsset(huskMat, matPath1);
-            // Đồng bộ sang cả Assets/Material để tiện quản lý chung
-            AssetDatabase.CopyAsset(matPath1, matPath2);
             Debug.Log($"[VolatileHuskSetup] 2/4: Đã tạo Material M_VolatileHusk tại: {matPath1}");
 
             // 4. Tạo Prefab VolatileHusk

@@ -28,28 +28,28 @@ namespace Vanguard.EditorTools
             {
                 AssetDatabase.CreateFolder("Assets/Prefabs", "Enemies");
             }
-            if (!AssetDatabase.IsValidFolder("Assets/Material"))
+            if (!AssetDatabase.IsValidFolder("Assets/Materials"))
             {
-                AssetDatabase.CreateFolder("Assets", "Material");
+                AssetDatabase.CreateFolder("Assets", "Materials");
             }
 
             // Tạo Material tím Hư Vô cho Void Caster & Projectile
-            Material voidMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Material/M_Void_Purple.mat");
+            Material voidMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/M_Void_Purple.mat");
             if (voidMat == null)
             {
                 Shader urpShader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
                 voidMat = new Material(urpShader);
                 voidMat.color = new Color(0.55f, 0.1f, 0.95f, 1f);
-                AssetDatabase.CreateAsset(voidMat, "Assets/Material/M_Void_Purple.mat");
+                AssetDatabase.CreateAsset(voidMat, "Assets/Materials/M_Void_Purple.mat");
             }
 
-            Material projMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Material/M_Void_Projectile.mat");
+            Material projMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/M_Void_Projectile.mat");
             if (projMat == null)
             {
                 Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Sprites/Default");
                 projMat = new Material(unlitShader);
                 projMat.color = new Color(0.8f, 0.25f, 1f, 1f);
-                AssetDatabase.CreateAsset(projMat, "Assets/Material/M_Void_Projectile.mat");
+                AssetDatabase.CreateAsset(projMat, "Assets/Materials/M_Void_Projectile.mat");
             }
 
             // 2. Tạo Prefab VoidProjectile:

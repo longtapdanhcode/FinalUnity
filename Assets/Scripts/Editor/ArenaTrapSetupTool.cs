@@ -32,7 +32,6 @@ namespace Vanguard.EditorTools
 
         private static void EnsureFolders()
         {
-            EnsureFolder("Assets", "Material");
             EnsureFolder("Assets", "Materials");
             EnsureFolder("Assets", "Prefabs");
             EnsureFolder("Assets/Prefabs", "Environment");
@@ -49,14 +48,9 @@ namespace Vanguard.EditorTools
 
         private static Material GetOrCreateTrapMaterial()
         {
-            string matPath1 = "Assets/Material/M_Hazard_Trap.mat";
-            string matPath2 = "Assets/Materials/M_Hazard_Trap.mat";
+            string matPath1 = "Assets/Materials/M_Hazard_Trap.mat";
 
             Material trapMat = AssetDatabase.LoadAssetAtPath<Material>(matPath1);
-            if (trapMat == null)
-            {
-                trapMat = AssetDatabase.LoadAssetAtPath<Material>(matPath2);
-            }
 
             if (trapMat == null)
             {
@@ -72,7 +66,6 @@ namespace Vanguard.EditorTools
                 trapMat.SetColor("_EmissionColor", new Color(1.4f, 0.35f, 0.05f, 1f));
 
                 AssetDatabase.CreateAsset(trapMat, matPath1);
-                AssetDatabase.CopyAsset(matPath1, matPath2);
                 AssetDatabase.SaveAssets();
                 Debug.Log($"[ArenaTrapSetupTool] Đã tạo Material: {matPath1}");
             }

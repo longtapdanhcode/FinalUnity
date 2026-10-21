@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vanguard.Graphics;
 using Vanguard.Player;
 
 namespace Vanguard.Cards
@@ -40,6 +41,8 @@ namespace Vanguard.Cards
             if (decoyPrefab == null) return;
 
             GameObject decoy = Instantiate(decoyPrefab, transform.position, transform.rotation);
+            ApplyGhostVisual(decoy);
+
             if (decoy.TryGetComponent(out DecoyLifetime lifetime))
             {
                 lifetime.Initialize(decoyDuration, tauntRadius);
@@ -48,6 +51,30 @@ namespace Vanguard.Cards
             {
                 Destroy(decoy, decoyDuration);
             }
+        }
+
+        /// <summary>Thay capsule placeholder bằng bản sao đóng băng của model Player, tô neon và tan dần.</summary>
+        private void ApplyGhostVisual(GameObject decoy)
+        {
+            StateAnimator source = GetComponentInChildren<StateAnimator>();
+            if (source == null) return; // không có model -> giữ capsule cũ
+
+            foreach (MeshRenderer placeholder in decoy.GetComponentsInChildren<MeshRenderer>())
+            {
+                placeholder.enabled = false;
+            }
+
+            GameObject ghost = Instantiate(source.gameObject, decoy.transform);
+            ghost.name = "GhostModel";
+
+            // Giữ nguyên tư thế hiện tại: bỏ Animator để không còn chạy animation
+            StateAnimator copyState = ghost.GetComponent<StateAnimator>();
+            if (copyState != null) Destroy(copyState);
+            Animator copyAnimator = ghost.GetComponent<Animator>();
+            if (copyAnimator != null) Destroy(copyAnimator);
+
+            DecoyGhostFade fade = decoy.AddComponent<DecoyGhostFade>();
+            fade.Initialize(decoyDuration, new Color(0f, 0.8f, 1.2f, 1f));
         }
     }
 }

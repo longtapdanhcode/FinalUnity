@@ -13,7 +13,7 @@ namespace Vanguard.EditorTools
         [MenuItem("Vanguard/Graphics/Setup Pause Menu")]
         public static void Setup()
         {
-            Canvas canvas = Object.FindFirstObjectByType<Canvas>();
+            Canvas canvas = Object.FindAnyObjectByType<Canvas>();
             if (canvas == null)
             {
                 Debug.LogError("[PauseMenuSetup] Không tìm thấy Canvas trong scene.");

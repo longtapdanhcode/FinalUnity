@@ -1,0 +1,22 @@
+[ModelInspect]
+Assets/Models/Crawler/Attack.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (4.62s)
+Assets/Models/Crawler/Crawler.fbx | rig=Generic scale=1 | skinned=2 static=0 bones=69 | size=(2.53, 2.38, 1.34) | clips: Take 001 (0.80s)
+Assets/Models/Crawler/Death.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (3.62s)
+Assets/Models/Crawler/Hit.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (0.98s)
+Assets/Models/Crawler/Walk.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (1.52s)
+Assets/Models/Player/Combo.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (3.22s)
+Assets/Models/Player/Dash.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (2.53s)
+Assets/Models/Player/Death.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (2.40s)
+Assets/Models/Player/Idle.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (1.95s)
+Assets/Models/Player/Player.fbx | rig=Generic scale=1 | skinned=1 static=0 bones=52 | size=(1.46, 1.78, 0.53) | clips: 
+Assets/Models/Player/Run.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (0.60s)
+Assets/Models/Player/SoulBurst.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (1.83s)
+Assets/Models/VoidCaster/Attack.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (2.63s)
+Assets/Models/VoidCaster/Death.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (3.62s)
+Assets/Models/VoidCaster/Hit.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (0.98s)
+Assets/Models/VoidCaster/Idle.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (5.32s)
+Assets/Models/VoidCaster/VoidCaster.fbx | rig=Generic scale=1 | skinned=1 static=0 bones=68 | size=(1.92, 2.44, 0.50) | clips: 
+Assets/Models/VolatileHusk/Charge.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (3.53s)
+Assets/Models/VolatileHusk/Explode.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (2.95s)
+Assets/Models/VolatileHusk/Run.fbx | rig=Generic scale=1 | skinned=0 static=0 bones=0 | size=(0.00, 0.00, 0.00) | clips: mixamo.com (0.63s)
+Assets/Models/VolatileHusk/VolatileHusk.fbx | rig=Generic scale=1 | skinned=1 static=0 bones=64 | size=(3.03, 2.53, 1.01) | clips: 

@@ -20,6 +20,7 @@ namespace Vanguard.Enemy
         [SerializeField] protected float moveSpeed = 4f;
         [SerializeField] protected float attackRange = 1.5f;
         [SerializeField] protected float attackCooldown = 1.5f;
+        [SerializeField, Min(0.1f)] protected float deathLingerTime = 0.5f; // thời gian giữ xác (cho animation chết)
 
         // Runtime states
         protected float currentHealth;
@@ -45,6 +46,7 @@ namespace Vanguard.Enemy
         #region Properties & Events
         public EnemyState CurrentState { get; protected set; } = EnemyState.Idle;
         public bool IsDead => CurrentState == EnemyState.Dead;
+        public float DeathLingerTime => deathLingerTime;
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
 
@@ -268,7 +270,7 @@ namespace Vanguard.Enemy
             // Nếu có knockback đang chạy, KnockbackRoutine sẽ tự hủy GameObject khi trượt xong
             if (knockbackCoroutine == null)
             {
-                deathDestroyCoroutine = StartCoroutine(DestroyAfterDelay(0.5f));
+                deathDestroyCoroutine = StartCoroutine(DestroyAfterDelay(deathLingerTime));
             }
         }
 

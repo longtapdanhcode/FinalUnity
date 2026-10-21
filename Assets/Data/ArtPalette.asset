@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693635c006d024dce9e38f2babf1b39e, type: 3}
+  m_Name: ArtPalette
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.ArtPaletteSO
+  voidBlack: {r: 0.02, g: 0.01, b: 0.06, a: 1}
+  voidViolet: {r: 0.12, g: 0.04, b: 0.25, a: 1}
+  fogColor: {r: 0.05, g: 0.03, b: 0.11, a: 1}
+  playerCyan: {r: 0, g: 0.8, b: 1.2, a: 1}
+  enemyRed: {r: 1, g: 0.15, b: 0.12, a: 1}
+  voidPurple: {r: 0.6, g: 0.2, b: 1, a: 1}
+  huskOrange: {r: 1, g: 0.35, b: 0.05, a: 1}
+  bossMagenta: {r: 0.9, g: 0.2, b: 1.6, a: 1}
+  dangerRed: {r: 1, g: 0.1, b: 0.1, a: 1}
+  hazardOrange: {r: 1, g: 0.28, b: 0.05, a: 1}
+  rarityCommon: {r: 0.7, g: 0.75, b: 0.85, a: 1}
+  rarityRare: {r: 0.2, g: 0.6, b: 1.4, a: 1}
+  rarityLegendary: {r: 1.4, g: 0.9, b: 0.2, a: 1}
+  backgroundIntensity: 1.5
+  enemyIntensity: 2
+  playerIntensity: 3
+  dangerIntensity: 4
+  fxIntensity: 6

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vanguard.Graphics;
 using Vanguard.Player;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -223,6 +224,7 @@ namespace Vanguard.Combat
             OnFuryChanged?.Invoke(currentFury, maxFury);
 
             Debug.Log("[Ultimate] Kích hoạt Soul Burst - Sóng xung kích Hư Vô!");
+            NeonPostFX.Pulse(1f);
 
             // Kích hoạt hiệu ứng sóng xung kích trực quan (VFX)
             PlayShockwaveVFX();

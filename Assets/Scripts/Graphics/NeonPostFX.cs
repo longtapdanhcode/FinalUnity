@@ -18,6 +18,11 @@ namespace Vanguard.Graphics
         [SerializeField, Range(0f, 1f)] private float vignetteIntensity = 0.3f;
         [SerializeField, Range(0f, 1f)] private float chromaticBase = 0.05f;
 
+        [Header("Color Adjustments")]
+        [SerializeField, Range(-100f, 100f)] private float saturation = 15f;
+        [SerializeField, Range(-100f, 100f)] private float contrast = 12f;
+        [SerializeField, Range(-2f, 2f)] private float postExposure = 0f;
+
         [Header("Options")]
         [SerializeField] private bool postProcessingEnabled = true;
         [SerializeField, Min(0.01f)] private float pulseDecayDuration = 0.25f;
@@ -26,6 +31,7 @@ namespace Vanguard.Graphics
         private Bloom bloom;
         private Vignette vignette;
         private ChromaticAberration chromatic;
+        private ColorAdjustments colorAdjustments;
 
         private float pulseAmount;
         private float pulseDecayRate;
@@ -53,6 +59,8 @@ namespace Vanguard.Graphics
             if (!profile.TryGet(out vignette)) vignette = profile.Add<Vignette>(true);
             if (!profile.TryGet(out chromatic)) chromatic = profile.Add<ChromaticAberration>(true);
 
+            if (!profile.TryGet(out colorAdjustments)) colorAdjustments = profile.Add<ColorAdjustments>(true);
+
             ApplyBase();
             volume.weight = postProcessingEnabled ? 1f : 0f;
         }
@@ -67,6 +75,9 @@ namespace Vanguard.Graphics
             bloom.intensity.Override(bloomIntensity);
             vignette.intensity.Override(vignetteIntensity);
             chromatic.intensity.Override(chromaticBase);
+            colorAdjustments.saturation.Override(saturation);
+            colorAdjustments.contrast.Override(contrast);
+            colorAdjustments.postExposure.Override(postExposure);
         }
 
         /// <summary>Xung chromatic aberration + bloom, tự giảm dần theo thời gian thực (không bị hit-stop làm chậm).</summary>

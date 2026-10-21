@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Vanguard.Graphics;
 
 namespace Vanguard.Juice
 {
@@ -77,6 +78,7 @@ namespace Vanguard.Juice
             if (!isHitStopping && Time.timeScale <= 0f) return;
 
             hitStopEndTime = Mathf.Max(hitStopEndTime, Time.unscaledTime + duration);
+            NeonPostFX.Pulse(0.3f);
 
             if (!isHitStopping)
             {

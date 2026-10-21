@@ -65,7 +65,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3486012264086491058}
-  - {fileID: 131656289656481373}
+  - {fileID: 5189749433666429738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &7199941110770743344
@@ -147,10 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270def0d4a86e4a1eb8cca576aae7d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyAnimationDriver
-  model: {fileID: 8631041477022127700}
+  model: {fileID: 1443920693305046655}
   attackLock: 0.9
   hitLock: 0.3
---- !u!1001 &457403227392360886
+--- !u!1001 &5732810610782340289
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -160,15 +160,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.90896446
+      value: 1.1816537
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6817233
+      value: 0.88624024
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.90896446
+      value: 1.1816537
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -176,7 +176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.9181682
+      value: -0.89361864
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -228,27 +228,27 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8631041477022127700}
+      addedObject: {fileID: 1443920693305046655}
   m_SourcePrefab: {fileID: 100100000, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
---- !u!4 &131656289656481373 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
-  m_PrefabInstance: {fileID: 457403227392360886}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &763479013814172903 stripped
+--- !u!1 &4849920714226579856 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
-  m_PrefabInstance: {fileID: 457403227392360886}
+  m_PrefabInstance: {fileID: 5732810610782340289}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8631041477022127700
+--- !u!114 &1443920693305046655
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763479013814172903}
+  m_GameObject: {fileID: 4849920714226579856}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937f2bda6ee574f4a8b11c862d0b3873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.StateAnimator
+--- !u!4 &5189749433666429738 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
+  m_PrefabInstance: {fileID: 5732810610782340289}
+  m_PrefabAsset: {fileID: 0}

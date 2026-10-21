@@ -33,7 +33,7 @@ Transform:
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8050337251536221007}
+  - {fileID: 5653735681386033111}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &4221671311987548048
@@ -117,10 +117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270def0d4a86e4a1eb8cca576aae7d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyAnimationDriver
-  model: {fileID: 715583651399850685}
+  model: {fileID: 6887240116518978226}
   attackLock: 0.9
   hitLock: 0.3
---- !u!1001 &7508118979380270244
+--- !u!1001 &5331316210234181692
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -130,15 +130,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.7920594
+      value: 1.0183622
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.7920594
+      value: 1.0183622
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7920594
+      value: 1.0183622
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -146,7 +146,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.36986494
+      value: -0.3326835
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -198,27 +198,27 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 715583651399850685}
+      addedObject: {fileID: 6887240116518978226}
   m_SourcePrefab: {fileID: 100100000, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
---- !u!1 &7274258701133375989 stripped
+--- !u!1 &4989366102808556909 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
-  m_PrefabInstance: {fileID: 7508118979380270244}
+  m_PrefabInstance: {fileID: 5331316210234181692}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &715583651399850685
+--- !u!114 &6887240116518978226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7274258701133375989}
+  m_GameObject: {fileID: 4989366102808556909}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937f2bda6ee574f4a8b11c862d0b3873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.StateAnimator
---- !u!4 &8050337251536221007 stripped
+--- !u!4 &5653735681386033111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
-  m_PrefabInstance: {fileID: 7508118979380270244}
+  m_PrefabInstance: {fileID: 5331316210234181692}
   m_PrefabAsset: {fileID: 0}

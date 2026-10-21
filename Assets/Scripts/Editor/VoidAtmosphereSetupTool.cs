@@ -77,7 +77,7 @@ namespace Vanguard.EditorTools
             Light sun = RenderSettings.sun;
             if (sun == null)
             {
-                foreach (Light l in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                foreach (Light l in Object.FindObjectsByType<Light>())
                 {
                     if (l.type == LightType.Directional) { sun = l; break; }
                 }

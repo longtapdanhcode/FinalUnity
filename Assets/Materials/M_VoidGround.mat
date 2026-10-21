@@ -27,7 +27,7 @@ Material:
     m_Floats:
     - _FadeRadius: 22
     - _GridSize: 2
-    - _LineIntensity: 0.8
+    - _LineIntensity: 3
     - _LineWidth: 1.2
     - _MajorEvery: 5
     - _PulseAmount: 0.25

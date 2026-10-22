@@ -46,6 +46,9 @@ namespace Vanguard.Environment
 
         private Rigidbody rb;
 
+        /// <summary>Phát khi bẫy gây sát thương lên một mục tiêu (dùng cho VFX); tham số là vị trí mục tiêu.</summary>
+        public event System.Action<Vector3> OnTargetHit;
+
         #region Properties
         public bool IsActive => isActive;
         public float RotationSpeed => rotationSpeed;
@@ -162,6 +165,8 @@ namespace Vanguard.Environment
             {
                 knockbackable.ApplyKnockback(knockbackDir, knockbackForce, knockbackDuration);
             }
+
+            OnTargetHit?.Invoke(other.transform.position);
 
             // 3. Ghi log chuẩn theo yêu cầu GDD
             Debug.Log($"[CenterRotatingTrap] Bẫy chém trúng {other.name}! Gây {damage} DMG và đẩy lùi.");

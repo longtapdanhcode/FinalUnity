@@ -39,7 +39,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _DissolveEdgeColor: {r: 0, g: 3, b: 4, a: 1}
-    - _EmissionColor: {r: 2.75, g: 0.375, b: 3.5, a: 2.5}
+    - _EmissionColor: {r: 1.7600001, g: 0.24000001, b: 2.24, a: 1.6}
     - _FlashColor: {r: 4, g: 4, b: 4, a: 1}
     - _RimColor: {r: 1.1, g: 0.15, b: 1.4, a: 1}
   m_BuildTextureStacks: []

@@ -30,7 +30,7 @@ namespace Vanguard.EditorTools
             if (palette == null) palette = ScriptableObject.CreateInstance<ArtPaletteSO>();
             Color hazard = palette.hazardOrange;
 
-            Material body = GetMaterial("M_TrapBody", neon, new Color(0.05f, 0.02f, 0.03f), hazard * 0.35f, hazard, 0.3f, 3f);
+            Material body = GetMaterial("M_TrapBody", neon, new Color(0.05f, 0.02f, 0.03f), hazard * 0.2f, hazard, 0.3f, 3f);
             Material edge = GetMaterial("M_TrapEdge", neon, Color.black, hazard * palette.dangerIntensity, hazard, 0.25f, 5f);
             Material tip = GetMaterial("M_TrapTip", neon, Color.black, hazard * palette.fxIntensity, hazard, 0.2f, 6f);
             Material spark = GetMaterial("M_TrapSpark", neon, Color.black, hazard * palette.fxIntensity, hazard, 0f, 1f);
@@ -68,9 +68,11 @@ namespace Vanguard.EditorTools
                 }
             }
 
-            // Trục giữa: đế tối + vòng viền phát sáng
-            GameObject hub = CreatePrimitive(root, PrimitiveType.Cylinder, Tag + "Hub", new Vector3(0f, -0.15f, 0f), new Vector3(2.4f, 0.3f, 2.4f), body);
-            CreatePrimitive(root, PrimitiveType.Cylinder, Tag + "HubRing", new Vector3(0f, 0.17f, 0f), new Vector3(2.7f, 0.03f, 2.7f), edge);
+            // Trục giữa: nắp tối đặt CAO HƠN mặt trên của lưỡi để che chỗ hai lưỡi giao nhau
+            // (tránh z-fighting), viền sáng bên dưới nắp và lõi phát sáng ở giữa.
+            CreatePrimitive(root, PrimitiveType.Cylinder, Tag + "HubRim", new Vector3(0f, 0.24f, 0f), new Vector3(2.5f, 0.03f, 2.5f), edge);
+            CreatePrimitive(root, PrimitiveType.Cylinder, Tag + "HubCap", new Vector3(0f, 0.27f, 0f), new Vector3(2.1f, 0.06f, 2.1f), body);
+            CreatePrimitive(root, PrimitiveType.Cylinder, Tag + "HubCore", new Vector3(0f, 0.335f, 0f), new Vector3(0.7f, 0.01f, 0.7f), tip);
 
             // Hạt tia lửa khi trúng mục tiêu (phát bằng script)
             ParticleSystem hitSparks = CreateSparkSystem(root, root.position, spark);

@@ -41,26 +41,49 @@ namespace Vanguard.EditorTools
             {
                 if (EditorUtility.IsPersistent(card) || !card.gameObject.scene.IsValid()) continue;
 
-                SerializedObject so = new SerializedObject(card);
-                Image border = so.FindProperty("borderImage").objectReferenceValue as Image;
-                if (border == null)
+                RectTransform cardRect = (RectTransform)card.transform;
+
+                // Khôi phục gốc thẻ (bản trước lỡ kéo giãn gốc thẻ làm thẻ bị co nhỏ)
+                Undo.RecordObject(cardRect, "Restore card rect");
+                cardRect.anchorMin = cardRect.anchorMax = new Vector2(0.5f, 0.5f);
+                cardRect.pivot = new Vector2(0.5f, 0.5f);
+                cardRect.sizeDelta = new Vector2(220f, 340f);
+                cardRect.localScale = Vector3.one;
+
+                // Gốc thẻ vốn là Image viền phẳng -> tắt đi, thay bằng GlowFrame
+                Image rootImage = card.GetComponent<Image>();
+                if (rootImage != null)
                 {
-                    Transform bg = card.transform.Find("Background");
-                    border = bg != null ? bg.GetComponent<Image>() : null;
-                    if (border == null) { Debug.LogWarning($"[CardRarityFX] {card.name}: thiếu borderImage/Background.", card); continue; }
-                    so.FindProperty("borderImage").objectReferenceValue = border;
-                    so.ApplyModifiedProperties();
+                    rootImage.material = null;
+                    rootImage.enabled = false;
+                    EditorUtility.SetDirty(rootImage);
                 }
 
-                Undo.RecordObject(border.rectTransform, "Card glow inset");
-                border.rectTransform.anchorMin = Vector2.zero;
-                border.rectTransform.anchorMax = Vector2.one;
-                border.rectTransform.offsetMin = new Vector2(-Inset, -Inset);
-                border.rectTransform.offsetMax = new Vector2(Inset, Inset);
+                Transform frame = card.transform.Find("GlowFrame");
+                if (frame == null)
+                {
+                    GameObject go = new GameObject("GlowFrame", typeof(RectTransform), typeof(Image));
+                    Undo.RegisterCreatedObjectUndo(go, "Create GlowFrame");
+                    go.transform.SetParent(card.transform, false);
+                    frame = go.transform;
+                }
+                frame.SetAsFirstSibling();
+                RectTransform fr = (RectTransform)frame;
+                fr.anchorMin = Vector2.zero;
+                fr.anchorMax = Vector2.one;
+                fr.offsetMin = new Vector2(-Inset, -Inset);
+                fr.offsetMax = new Vector2(Inset, Inset);
+                fr.localScale = Vector3.one;
+
+                Image border = frame.GetComponent<Image>();
                 border.sprite = null;
                 border.raycastTarget = true;
                 border.material = mat;
                 border.color = Color.white;
+
+                SerializedObject so = new SerializedObject(card);
+                so.FindProperty("borderImage").objectReferenceValue = border;
+                so.ApplyModifiedProperties();
 
                 CardRarityFX fx = card.GetComponent<CardRarityFX>();
                 if (fx == null) fx = Undo.AddComponent<CardRarityFX>(card.gameObject);

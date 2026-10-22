@@ -90,7 +90,7 @@ Shader "Vanguard/UICardGlow"
                 float boost = 1.0 + _Hover * 0.9;
 
                 // Outer glow
-                float outer = exp(-max(d, 0.0) / max(_GlowRadius, 0.001));
+                float outer = pow(exp(-max(d, 0.0) / max(_GlowRadius, 0.001)), 1.4);
                 outer *= smoothstep(-0.5, 0.5, d) * (1.0 - smoothstep(_Inset * 0.55, _Inset, d));
                 float glowA = saturate(outer * _Intensity * pulse * boost);
 
@@ -107,7 +107,7 @@ Shader "Vanguard/UICardGlow"
                 float rim = exp(-max(fd, 0.0) / 16.0) * 0.28 * _Intensity * pulse * boost;
 
                 float3 glowRGB = _GlowColor.rgb;
-                float3 frameCol = glowRGB * (1.25 + band * 2.5 + _Hover * 0.8) + sparkle;
+                float3 frameCol = glowRGB * (1.0 + _Hover * 0.2) + band * 0.9 + sparkle * 0.8;
                 float3 fillCol = _FillColor.rgb + glowRGB * (rim + band * 0.12) + sparkle * glowRGB;
                 float3 outerCol = glowRGB;
 

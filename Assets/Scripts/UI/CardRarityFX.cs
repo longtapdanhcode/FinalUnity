@@ -113,12 +113,12 @@ namespace Vanguard.UI
             switch (cardRarity)
             {
                 case CardRarity.Legendary:
-                    intensity = 1.8f; radius = 30f; frame = 4f; pulseSpeed = 3.5f; pulseAmount = 0.4f;
-                    shimmerSpeed = 1.1f; shimmerStrength = 1.0f; sparkleStrength = 1f; hdr = 1.6f;
+                    intensity = 0.95f; radius = 26f; frame = 3f; pulseSpeed = 3.5f; pulseAmount = 0.4f;
+                    shimmerSpeed = 1.1f; shimmerStrength = 1.0f; sparkleStrength = 1f; hdr = 1f;
                     break;
                 case CardRarity.Rare:
-                    intensity = 1.0f; radius = 20f; frame = 3f; pulseSpeed = 2f; pulseAmount = 0.25f;
-                    shimmerSpeed = 0.5f; shimmerStrength = 0.4f; sparkleStrength = 0f; hdr = 1.3f;
+                    intensity = 0.8f; radius = 18f; frame = 3f; pulseSpeed = 2f; pulseAmount = 0.25f;
+                    shimmerSpeed = 0.5f; shimmerStrength = 0.4f; sparkleStrength = 0f; hdr = 1f;
                     break;
                 default:
                     intensity = 0.45f; radius = 10f; frame = 2f; pulseSpeed = 0f; pulseAmount = 0f;

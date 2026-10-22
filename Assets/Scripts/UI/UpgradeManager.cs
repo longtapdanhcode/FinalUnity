@@ -148,13 +148,26 @@ namespace Vanguard.UI
         {
             if (!isModalOpen || card == null) return;
 
+            RectTransform chosenRect = FindCardRect(card);
+
             // Bật lại input trước để các component Effect của thẻ khởi tạo trên Player đang hoạt động
             CloseModal();
 
             card.ApplyUpgrade(player);
+            CardActivationFX.Play(chosenRect, card);
             Debug.Log($"[UpgradeManager] Đã chọn thẻ: {card.CardName} ({card.Rarity})");
 
             ResumeWaves();
+        }
+
+        private RectTransform FindCardRect(UpgradeCardSO card)
+        {
+            for (int i = 0; i < cardUIItems.Count; i++)
+            {
+                UpgradeCardUI ui = cardUIItems[i];
+                if (ui != null && ui.CurrentCard == card) return ui.transform as RectTransform;
+            }
+            return null;
         }
 
         private void ResumeWaves()

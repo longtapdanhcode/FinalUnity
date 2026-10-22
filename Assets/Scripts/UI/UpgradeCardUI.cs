@@ -26,6 +26,7 @@ namespace Vanguard.UI
         private UpgradeCardSO currentCard;
 
         public UpgradeCardSO CurrentCard => currentCard;
+        public CardRarityFX RarityFX => GetComponent<CardRarityFX>();
 
         /// <summary>
         /// Đổ dữ liệu thẻ lên UI và đăng ký callback khi người chơi bấm chọn.
@@ -52,6 +53,10 @@ namespace Vanguard.UI
             }
 
             if (borderImage != null) borderImage.color = rarityColor;
+
+            // Viền glow theo độ hiếm (Card 8.6); nếu chưa gắn CardRarityFX thì giữ viền màu phẳng
+            CardRarityFX fx = GetComponent<CardRarityFX>();
+            if (fx != null) fx.Apply(card.Rarity, rarityColor);
 
             if (iconImage != null)
             {

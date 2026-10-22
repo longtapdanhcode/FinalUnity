@@ -60,18 +60,23 @@ namespace Vanguard.Graphics
                 for (int i = 0; i < size; i++)
                 {
                     pool.effects[i] = CreateEffect($"VFX_{(VfxId)id}_{i}", entry.asset, transform);
-                    pool.effects[i].gameObject.SetActive(false);
                 }
                 pools[id] = pool;
             }
         }
 
+        // Tên event không tồn tại trong graph: chặn VFX tự phát khi vừa bật (mặc định là "OnPlay").
+        // Hiệu ứng chỉ chạy khi code gọi Play()/SendEvent("OnPlay") rõ ràng.
+        private const string NoAutoPlayEvent = "OnNeverAutoPlay";
+
         private static VisualEffect CreateEffect(string name, VisualEffectAsset asset, Transform parent)
         {
             GameObject go = new GameObject(name);
+            go.SetActive(false); // gắn component khi đang tắt để OnEnable chưa kịp phát event khởi tạo
             go.transform.SetParent(parent, false);
             VisualEffect ve = go.AddComponent<VisualEffect>();
             ve.visualEffectAsset = asset;
+            ve.initialEventName = NoAutoPlayEvent;
             return ve;
         }
 
@@ -79,7 +84,9 @@ namespace Vanguard.Graphics
         public VisualEffect CreateAttached(VfxId id, Transform parent)
         {
             if (library == null || !library.TryGet(id, out VfxLibrarySO.Entry entry)) return null;
-            return CreateEffect($"VFX_{id}", entry.asset, parent);
+            VisualEffect ve = CreateEffect($"VFX_{id}", entry.asset, parent);
+            ve.gameObject.SetActive(true);
+            return ve;
         }
 
         public static void Play(VfxId id, Vector3 position, Quaternion rotation, Color color, float scale = 1f)

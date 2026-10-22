@@ -18,7 +18,7 @@ namespace Vanguard.Graphics
 
         [Header("Màu khác (HDR)")]
         [ColorUsage(false, true)] [SerializeField] private Color dashColor = new Color(0f, 0.8f, 1.2f, 1f);
-        [ColorUsage(false, true)] [SerializeField] private Color impactColor = new Color(1.4f, 1.4f, 1.6f, 1f);
+        [ColorUsage(false, true)] [SerializeField] private Color impactColor = new Color(1.6f, 0.9f, 0.25f, 1f);
         [ColorUsage(false, true)] [SerializeField] private Color soulBurstColor = new Color(0.9f, 0.2f, 1.6f, 1f);
 
         private PlayerDash dash;

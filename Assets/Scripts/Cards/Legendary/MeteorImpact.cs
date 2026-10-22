@@ -48,7 +48,7 @@ namespace Vanguard.Cards
             Vector3 start = groundPoint + Vector3.up * SpawnHeight;
 
             // Vòng cảnh báo nạp đầy đúng bằng thời gian rơi
-            TelegraphHandle warning = TelegraphManager.ShowCircle(groundPoint, radius, fallDelay);
+            TelegraphHandle warning = TelegraphManager.ShowCircle(groundPoint, radius, fallDelay, danger: Vanguard.FX.TelegraphDanger.Friendly);
             if (explosionVFX != null) explosionVFX.gameObject.SetActive(false);
             if (meteorVisual != null)
             {

@@ -52,25 +52,29 @@ namespace Vanguard.FX
         }
 
         #region Static API
-        public static TelegraphHandle ShowCircle(Vector3 position, float radius, float duration, Action onComplete = null)
+        public static TelegraphHandle ShowCircle(Vector3 position, float radius, float duration, Action onComplete = null,
+            TelegraphDanger danger = TelegraphDanger.Medium)
         {
             TelegraphWarning warning = GetInstance().Acquire(TelegraphShape.Circle);
+            warning.SetDanger(danger);
             warning.ShowCircle(position, radius, duration, onComplete);
             return new TelegraphHandle(warning);
         }
 
         public static TelegraphHandle ShowSector(Vector3 position, Vector3 forward, float angle, float radius,
-            float duration, Action onComplete = null)
+            float duration, Action onComplete = null, TelegraphDanger danger = TelegraphDanger.Medium)
         {
             TelegraphWarning warning = GetInstance().Acquire(TelegraphShape.Sector);
+            warning.SetDanger(danger);
             warning.ShowSector(position, forward, angle, radius, duration, onComplete);
             return new TelegraphHandle(warning);
         }
 
         public static TelegraphHandle ShowLine(Vector3 position, Vector3 forward, float length, float width,
-            float duration, Action onComplete = null)
+            float duration, Action onComplete = null, TelegraphDanger danger = TelegraphDanger.Medium)
         {
             TelegraphWarning warning = GetInstance().Acquire(TelegraphShape.Line);
+            warning.SetDanger(danger);
             warning.ShowLine(position, forward, length, width, duration, onComplete);
             return new TelegraphHandle(warning);
         }

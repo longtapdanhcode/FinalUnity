@@ -11,6 +11,15 @@ namespace Vanguard.FX
         Line
     }
 
+    /// <summary>Mức nguy hiểm quyết định màu cảnh báo (Sprint 8 - 8.4).</summary>
+    public enum TelegraphDanger
+    {
+        Friendly, // đòn của phe người chơi (cyan)
+        Low,      // vàng
+        Medium,   // cam
+        High      // đỏ
+    }
+
     /// <summary>
     /// Vùng cảnh báo nguy hiểm phẳng trên mặt sàn (Sprint 5 - Card 5.4): khung nền mờ thể hiện phạm vi tối đa
     /// và lớp nạp đầy (fill) lớn dần cho tới khi lấp đầy 100% thì đòn đánh kích hoạt.
@@ -26,8 +35,8 @@ namespace Vanguard.FX
         [SerializeField] private MeshRenderer baseRenderer = null;
         [Tooltip("Lớp nạp đầy: lớn dần từ 0 tới 100% theo thời gian")]
         [SerializeField] private MeshRenderer fillRenderer = null;
-        [SerializeField] private Color baseColor = new Color(1f, 0.1f, 0.1f, 0.25f);
-        [SerializeField] private Color fillColor = new Color(1f, 0.1f, 0.1f, 0.6f);
+        [Tooltip("Mức nguy hiểm mặc định; có thể đổi lúc gọi Show qua TelegraphManager")]
+        [SerializeField] private TelegraphDanger danger = TelegraphDanger.Medium;
 
         [Header("Placement")]
         [Tooltip("Độ cao so với mặt sàn để tránh Z-fighting")]
@@ -35,6 +44,10 @@ namespace Vanguard.FX
         [SerializeField] private float fillLayerOffset = 0.005f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int LayerId = Shader.PropertyToID("_Layer");
+        private static readonly int ShapeId = Shader.PropertyToID("_Shape");
+        private static readonly int HalfAngleId = Shader.PropertyToID("_HalfAngle");
+        private static readonly int ProgressId = Shader.PropertyToID("_Progress");
         private static int groundMask = -1;
         private static Material fallbackMaterial;
 
@@ -62,6 +75,13 @@ namespace Vanguard.FX
         public int Ticket { get; private set; }
 
         public TelegraphShape DefaultShape => shape;
+
+        /// <summary>Đổi mức nguy hiểm (màu) cho lần hiển thị tiếp theo hoặc đang chạy.</summary>
+        public void SetDanger(TelegraphDanger level)
+        {
+            danger = level;
+            if (visualsReady) ApplyDangerColors();
+        }
 
         private void Awake()
         {
@@ -134,6 +154,8 @@ namespace Vanguard.FX
             transform.SetPositionAndRotation(
                 new Vector3(position.x, FindGroundY(position) + groundOffset, position.z), rotation);
             baseTransform.localScale = scale;
+            ApplyShapeParams(newShape, sectorAngle);
+            ApplyDangerColors();
             ApplyFill(0f);
 
             Ticket++;
@@ -165,6 +187,10 @@ namespace Vanguard.FX
                 scale.z *= t;
             }
             fillTransform.localScale = scale;
+
+            fillRenderer.GetPropertyBlock(block);
+            block.SetFloat(ProgressId, t);
+            fillRenderer.SetPropertyBlock(block);
         }
 
         private void Finish(bool invokeCallback)
@@ -215,8 +241,46 @@ namespace Vanguard.FX
             fillRenderer.sortingOrder = 1;
 
             block = new MaterialPropertyBlock();
-            ApplyColor(baseRenderer, baseColor);
-            ApplyColor(fillRenderer, fillColor);
+            SetFloat(baseRenderer, LayerId, 0f);
+            SetFloat(fillRenderer, LayerId, 1f);
+            ApplyDangerColors();
+        }
+
+        private void SetFloat(Renderer renderer, int id, float value)
+        {
+            renderer.GetPropertyBlock(block);
+            block.SetFloat(id, value);
+            renderer.SetPropertyBlock(block);
+        }
+
+        private void ApplyShapeParams(TelegraphShape newShape, float sectorAngle)
+        {
+            float halfAngle = newShape == TelegraphShape.Sector ? sectorAngle * 0.5f * Mathf.Deg2Rad : Mathf.PI;
+            SetShape(baseRenderer, newShape, halfAngle);
+            SetShape(fillRenderer, newShape, halfAngle);
+        }
+
+        private void SetShape(Renderer renderer, TelegraphShape newShape, float halfAngle)
+        {
+            renderer.GetPropertyBlock(block);
+            block.SetFloat(ShapeId, (float)(int)newShape);
+            block.SetFloat(HalfAngleId, halfAngle);
+            renderer.SetPropertyBlock(block);
+        }
+
+        /// <summary>Màu HDR theo mức nguy hiểm: nền mờ hơn, lớp nạp đầy đậm hơn để bloom nổi trên sàn tối.</summary>
+        private void ApplyDangerColors()
+        {
+            Color hue;
+            switch (danger)
+            {
+                case TelegraphDanger.Friendly: hue = new Color(0.1f, 0.85f, 1f); break;
+                case TelegraphDanger.Low: hue = new Color(1f, 0.75f, 0.1f); break;
+                case TelegraphDanger.High: hue = new Color(1f, 0.04f, 0.12f); break;
+                default: hue = new Color(1f, 0.35f, 0.05f); break;
+            }
+            ApplyColor(baseRenderer, new Color(hue.r * 1.4f, hue.g * 1.4f, hue.b * 1.4f, 0.6f));
+            ApplyColor(fillRenderer, new Color(hue.r * 2.2f, hue.g * 2.2f, hue.b * 2.2f, 0.9f));
         }
 
         private MeshRenderer CreateLayer(string layerName, int sortingOrder, float yOffset)

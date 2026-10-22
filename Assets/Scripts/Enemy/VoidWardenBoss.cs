@@ -222,7 +222,7 @@ namespace Vanguard.Enemy
                 Vector3 direction = transform.forward;
 
                 // Telegraph hình quạt nạp đầy trong arcTelegraphTime
-                coneTelegraph = TelegraphManager.ShowSector(transform.position, direction, arcAngle, arcRange, arcTelegraphTime);
+                coneTelegraph = TelegraphManager.ShowSector(transform.position, direction, arcAngle, arcRange, arcTelegraphTime, danger: Vanguard.FX.TelegraphDanger.High);
                 float elapsed = 0f;
                 while (elapsed < arcTelegraphTime)
                 {
@@ -279,7 +279,7 @@ namespace Vanguard.Enemy
             ChangeState(EnemyState.Casting);
             EnsurePlayerRefs();
 
-            circleTelegraph = TelegraphManager.ShowCircle(transform.position, blastRadius, vortexDuration);
+            circleTelegraph = TelegraphManager.ShowCircle(transform.position, blastRadius, vortexDuration, danger: Vanguard.FX.TelegraphDanger.High);
 
             float elapsed = 0f;
             while (elapsed < vortexDuration)

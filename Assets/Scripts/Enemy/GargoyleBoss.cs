@@ -193,7 +193,7 @@ namespace Vanguard.Enemy
         {
             if (show)
             {
-                slamTelegraph = TelegraphManager.ShowCircle(transform.position, slamRadius, telegraphDuration);
+                slamTelegraph = TelegraphManager.ShowCircle(transform.position, slamRadius, telegraphDuration, danger: Vanguard.FX.TelegraphDanger.High);
             }
             else
             {

@@ -93,7 +93,7 @@ namespace Vanguard.Combat
 
             // Bỏ qua Layer "Enemy" (đạn xuyên qua đồng đội quái)
             int enemyLayer = LayerMask.NameToLayer("Enemy");
-            if (other.gameObject.layer == enemyLayer || other.CompareTag("Enemy"))
+            if (other.gameObject.layer == enemyLayer)
             {
                 return;
             }

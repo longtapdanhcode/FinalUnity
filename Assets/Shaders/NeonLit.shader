@@ -84,6 +84,7 @@ Shader "Vanguard/NeonLit"
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_instancing
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -93,6 +94,7 @@ Shader "Vanguard/NeonLit"
                 float4 positionOS : POSITION;
                 float3 normalOS   : NORMAL;
                 float2 uv         : TEXCOORD0;
+                float2 uv1        : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -103,6 +105,9 @@ Shader "Vanguard/NeonLit"
                 float3 normalWS   : TEXCOORD1;
                 float3 positionWS : TEXCOORD2;
                 float3 positionOS : TEXCOORD3;
+                #ifdef LIGHTMAP_ON
+                float2 lightmapUV : TEXCOORD4;
+                #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -117,6 +122,9 @@ Shader "Vanguard/NeonLit"
                 OUT.positionOS = IN.positionOS.xyz;
                 OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
                 OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
+                #ifdef LIGHTMAP_ON
+                OUT.lightmapUV = IN.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
+                #endif
                 return OUT;
             }
 
@@ -137,7 +145,12 @@ Shader "Vanguard/NeonLit"
                 float4 shadowCoord = TransformWorldToShadowCoord(IN.positionWS);
                 Light mainLight = GetMainLight(shadowCoord);
                 half ndl = saturate(dot(normalWS, mainLight.direction));
+                // Vật tĩnh đã bake: lấy lightmap; vật động: Light Probe (SH) nội suy theo vị trí
+                #if defined(LIGHTMAP_ON)
+                half3 ambient = SampleLightmap(IN.lightmapUV, normalWS);
+                #else
                 half3 ambient = SampleSH(normalWS);
+                #endif
                 half3 lit = albedo * (mainLight.color * ndl * mainLight.shadowAttenuation + ambient);
 
                 half pulse = 1.0 + sin(_Time.y * _PulseSpeed) * _PulseAmount;
@@ -241,6 +254,49 @@ Shader "Vanguard/NeonLit"
             {
                 clip(ValueNoise(IN.positionOS * _NoiseScale) - _DissolveAmount);
                 return IN.positionCS.z;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Meta"
+            Tags { "LightMode" = "Meta" }
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma vertex vertMeta
+            #pragma fragment fragMeta
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/MetaInput.hlsl"
+
+            struct AttributesMeta
+            {
+                float4 positionOS : POSITION;
+                float2 uv0        : TEXCOORD0;
+                float2 uv1        : TEXCOORD1;
+                float2 uv2        : TEXCOORD2;
+            };
+
+            struct VaryingsMeta
+            {
+                float4 positionCS : SV_POSITION;
+                float2 uv         : TEXCOORD0;
+            };
+
+            VaryingsMeta vertMeta(AttributesMeta IN)
+            {
+                VaryingsMeta OUT;
+                OUT.positionCS = UnityMetaVertexPosition(IN.positionOS.xyz, IN.uv1, IN.uv2);
+                OUT.uv = TRANSFORM_TEX(IN.uv0, _BaseMap);
+                return OUT;
+            }
+
+            half4 fragMeta(VaryingsMeta IN) : SV_Target
+            {
+                UnityMetaInput meta = (UnityMetaInput)0;
+                meta.Albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv).rgb * _BaseColor.rgb;
+                meta.Emission = _EmissionColor.rgb;
+                return UnityMetaFragment(meta);
             }
             ENDHLSL
         }

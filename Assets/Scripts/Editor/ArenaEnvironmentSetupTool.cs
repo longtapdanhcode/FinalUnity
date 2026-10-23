@@ -122,15 +122,7 @@ namespace Vanguard.EditorTools
                 CreateBox(root.transform, $"Ring_{y}", new Vector3(0, y, 0), Quaternion.identity, new Vector3(1f, 0.1f, 1f), neonCyan);
             }
 
-            GameObject lightGo = new GameObject("AccentLight");
-            lightGo.transform.SetParent(root.transform, false);
-            lightGo.transform.localPosition = new Vector3(0, 2.8f, 0);
-            Light light = lightGo.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.range = 12f;
-            light.intensity = 3f;
-            light.shadows = LightShadows.None;
-            light.color = new Color(0f, 0.8f, 1f);
+            // Không dùng point light: NeonLit chỉ nhận main light + GI, vòng emissive đã đủ phát sáng (và được bake vào GI).
 
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PillarPath);
             Object.DestroyImmediate(root);

@@ -24,19 +24,25 @@ namespace Vanguard.Graphics
             public float renderScale;
             public int msaa;
             public bool hqBloom;
+            public int shadowCascades;
+            public int shadowResolution;
+            public int maxAdditionalLights;
         }
 
         private static readonly TierPreset[] Presets =
         {
-            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false },
-            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false },
-            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true },
+            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false, shadowCascades = 1, shadowResolution = 1024, maxAdditionalLights = 0 },
+            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false, shadowCascades = 2, shadowResolution = 2048, maxAdditionalLights = 2 },
+            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true, shadowCascades = 4, shadowResolution = 2048, maxAdditionalLights = 4 },
         };
 
         private static bool hasBackup;
         private static float backupShadowDistance;
         private static float backupRenderScale;
         private static int backupMsaa;
+        private static int backupCascades;
+        private static int backupShadowResolution;
+        private static int backupMaxAdditionalLights;
 
         public static GraphicsTier Tier { get; private set; } = GraphicsTier.High;
         public static bool PostProcessing { get; private set; } = true;
@@ -91,11 +97,17 @@ namespace Vanguard.Graphics
                     backupShadowDistance = urp.shadowDistance;
                     backupRenderScale = urp.renderScale;
                     backupMsaa = urp.msaaSampleCount;
+                    backupCascades = urp.shadowCascadeCount;
+                    backupShadowResolution = urp.mainLightShadowmapResolution;
+                    backupMaxAdditionalLights = urp.maxAdditionalLightsCount;
                     hasBackup = true;
                 }
                 urp.shadowDistance = preset.shadowDistance;
                 urp.renderScale = preset.renderScale;
                 urp.msaaSampleCount = preset.msaa;
+                urp.shadowCascadeCount = preset.shadowCascades;
+                urp.mainLightShadowmapResolution = preset.shadowResolution;
+                urp.maxAdditionalLightsCount = preset.maxAdditionalLights;
             }
 
             QualitySettings.vSyncCount = VSync ? 1 : 0;
@@ -118,6 +130,9 @@ namespace Vanguard.Graphics
                 urp.shadowDistance = backupShadowDistance;
                 urp.renderScale = backupRenderScale;
                 urp.msaaSampleCount = backupMsaa;
+                urp.shadowCascadeCount = backupCascades;
+                urp.mainLightShadowmapResolution = backupShadowResolution;
+                urp.maxAdditionalLightsCount = backupMaxAdditionalLights;
             }
             hasBackup = false;
         }

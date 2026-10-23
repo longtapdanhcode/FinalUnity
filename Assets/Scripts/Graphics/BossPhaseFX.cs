@@ -83,7 +83,7 @@ namespace Vanguard.Graphics
 
             float t = Time.time;
             Color calm = baseEmission * (1f + 0.12f * Mathf.Sin(t * calmPulseSpeed));
-            Color alert = alertColor * (alertIntensity * (1f + 0.3f * Mathf.Sin(t * alertPulseSpeed)));
+            Color alert = alertColor * (alertIntensity * (1f + 0.18f * Mathf.Sin(t * alertPulseSpeed)));
             Color emission = Color.Lerp(calm, alert, level);
             Color rim = Color.Lerp(baseRim, alertColor, level);
 

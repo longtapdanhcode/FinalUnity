@@ -89,7 +89,7 @@ namespace Vanguard.EditorTools
             new CharSpec
             {
                 id = "Gargoyle", folder = "GargoyleBoss", mainFile = "Gargoyle Boss", targetPath = "Assets/Prefabs/Enemies/Gargoyle.prefab",
-                height = 4.5f, isBoss = true, attackLock = 1.8f, minHitInterval = 0.8f, deathLinger = 2.8f, alertIntensity = 3.5f, alertRise = 0.9f,
+                height = 4.5f, isBoss = true, attackLock = 1.8f, minHitInterval = 0.8f, deathLinger = 2.8f, alertIntensity = 1.8f, alertRise = 0.9f,
                 loopClips = new[] { "Idle_Gargoyle Boss", "Walk_Gargoyle Boss" },
                 color = p => p.hazardOrange,
                 states = new[]
@@ -102,7 +102,7 @@ namespace Vanguard.EditorTools
             new CharSpec
             {
                 id = "VoidWarden", folder = "VoidWardenBoss", mainFile = "Void Warden Boss", targetPath = "Assets/Prefabs/Enemies/VoidWarden.prefab",
-                height = 5.5f, isBoss = true, attackLock = 1.6f, castLock = 2.2f, minHitInterval = 0.8f, deathLinger = 3.2f, alertIntensity = 3.2f, alertRise = 2.5f,
+                height = 5.5f, isBoss = true, attackLock = 1.6f, castLock = 2.2f, minHitInterval = 0.8f, deathLinger = 3.2f, alertIntensity = 1.1f, alertRise = 2.5f,
                 loopClips = new[] { "Idle_Void Warden Boss", "Walk_Void Warden Boss" },
                 color = p => p.bossMagenta,
                 states = new[]

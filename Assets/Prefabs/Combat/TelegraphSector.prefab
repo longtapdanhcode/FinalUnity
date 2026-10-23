@@ -49,8 +49,7 @@ MonoBehaviour:
   shape: 1
   baseRenderer: {fileID: 9209022955180021064}
   fillRenderer: {fileID: 4287313583132102168}
-  baseColor: {r: 1, g: 0.1, b: 0.1, a: 0.25}
-  fillColor: {r: 1, g: 0.1, b: 0.1, a: 0.6}
+  danger: 2
   groundOffset: 0.02
   fillLayerOffset: 0.005
 --- !u!1 &7768863229110593631
@@ -119,7 +118,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8834371d79bf7460b88e74a19396a51c, type: 2}
+  - {fileID: 2100000, guid: 583447335802f4d5892602ac58b3cb91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -209,7 +208,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8834371d79bf7460b88e74a19396a51c, type: 2}
+  - {fileID: 2100000, guid: 583447335802f4d5892602ac58b3cb91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -200,7 +200,7 @@ namespace Vanguard.EditorTools
                     c.loopPose = loop;
                     c.lockRootRotation = true;
                     c.lockRootHeightY = true;
-                    c.lockRootPositionXZ = true;
+                    c.lockRootPositionXZ = false; // false = tách chuyển động ngang khỏi pose (animation chạy tại chỗ, không giật ngược)
                     imp.clipAnimations = new[] { c };
                 }
                 imp.SaveAndReimport();

@@ -125,7 +125,7 @@ namespace Vanguard.EditorTools
 
         private static void ConfigureMainLight()
         {
-            foreach (Light l in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+            foreach (Light l in Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude))
             {
                 if (l.type != LightType.Directional) continue;
                 l.lightmapBakeType = LightmapBakeType.Mixed;

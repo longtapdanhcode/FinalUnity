@@ -22,6 +22,8 @@ namespace Vanguard.Graphics
         private SoulBurst soulBurst;
         private NeonModelFX fx;
         private bool dead;
+        private bool dashFacing;
+        private Vector3 dashDirection;
 
         private void Awake()
         {
@@ -41,7 +43,7 @@ namespace Vanguard.Graphics
 
         private void OnEnable()
         {
-            if (dash != null) dash.OnDashStarted += HandleDash;
+            if (dash != null) { dash.OnDashStarted += HandleDash; dash.OnDashEnded += HandleDashEnded; }
             if (combat != null) combat.OnAttackPerformed += HandleAttack;
             if (health != null) { health.OnPlayerDeath += HandleDeath; health.OnDamaged += HandleDamaged; }
             if (soulBurst != null) soulBurst.OnSoulBurstFired += HandleSoulBurst;
@@ -49,7 +51,8 @@ namespace Vanguard.Graphics
 
         private void OnDisable()
         {
-            if (dash != null) dash.OnDashStarted -= HandleDash;
+            if (dash != null) { dash.OnDashStarted -= HandleDash; dash.OnDashEnded -= HandleDashEnded; }
+            EndDashFacing();
             if (combat != null) combat.OnAttackPerformed -= HandleAttack;
             if (health != null) { health.OnPlayerDeath -= HandleDeath; health.OnDamaged -= HandleDamaged; }
             if (soulBurst != null) soulBurst.OnSoulBurstFired -= HandleSoulBurst;
@@ -63,7 +66,36 @@ namespace Vanguard.Graphics
             model.Play(v.magnitude > runThreshold ? Run : Idle, 0.12f);
         }
 
-        private void HandleDash() { if (!dead) model.Play(Dash, 0.05f, 0f, dashLock, true); }
+        private void HandleDash()
+        {
+            if (dead) return;
+            model.Play(Dash, 0.05f, 0f, dashLock, true);
+
+            // Hướng dash theo WASD nhưng thân nhân vật quay theo chuột -> clip lao tới trông như bị kéo ngược.
+            // Xoay model theo hướng lướt trong suốt cú dash, trả về hướng cũ khi kết thúc.
+            Vector3 v = rb != null ? rb.linearVelocity : Vector3.zero;
+            v.y = 0f;
+            if (v.sqrMagnitude > 0.01f)
+            {
+                dashDirection = v.normalized;
+                dashFacing = true;
+                model.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
+            }
+        }
+
+        private void HandleDashEnded() { EndDashFacing(); }
+
+        private void EndDashFacing()
+        {
+            dashFacing = false;
+            if (model != null) model.transform.localRotation = Quaternion.identity;
+        }
+
+        private void LateUpdate()
+        {
+            // Giữ model đúng hướng lướt kể cả khi root còn xoay theo chuột
+            if (dashFacing && model != null) model.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
+        }
 
         private void HandleAttack(int step)
         {
@@ -83,6 +115,7 @@ namespace Vanguard.Graphics
         private void HandleDeath()
         {
             dead = true;
+            EndDashFacing();
             model.Play(Death, 0.1f, 0f, 0f, true);
             if (fx != null) fx.Dissolve(1.0f, 0.8f);
         }

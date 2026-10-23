@@ -57,7 +57,7 @@ namespace Vanguard.EditorTools
             return asset;
         }
 
-        private static Material GetPreset(TMP_FontAsset font, TextFx fx)
+        internal static Material GetPreset(TMP_FontAsset font, TextFx fx)
         {
             string path = $"{FontDir}/{font.name} - {fx}.mat";
             Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -129,9 +129,7 @@ namespace Vanguard.EditorTools
             return text;
         }
 
-        /// <summary>Gắn khung neon (Image con "Glow" ở dưới cùng) cho panel; trả về component.</summary>
-        internal static NeonPanelFX AddPanel(Transform panel, Color glow, float inset = 16f, float intensity = 0.8f,
-            float corner = 8f, Color? fill = null)
+        internal static Material EnsurePanelMaterial()
         {
             Shader shader = Shader.Find("Vanguard/UICardGlow");
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(PanelMaterialPath);
@@ -141,6 +139,14 @@ namespace Vanguard.EditorTools
                 AssetDatabase.CreateAsset(mat, PanelMaterialPath);
             }
             else mat.shader = shader;
+            return mat;
+        }
+
+        /// <summary>Gắn khung neon (Image con "Glow" ở dưới cùng) cho panel; trả về component.</summary>
+        internal static NeonPanelFX AddPanel(Transform panel, Color glow, float inset = 16f, float intensity = 0.8f,
+            float corner = 8f, Color? fill = null)
+        {
+            Material mat = EnsurePanelMaterial();
 
             GameObject go = UpgradeUISetupTool.CreateUIObject("Glow", panel);
             go.transform.SetAsFirstSibling();

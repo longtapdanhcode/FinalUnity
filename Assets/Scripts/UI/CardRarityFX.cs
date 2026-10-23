@@ -61,6 +61,9 @@ namespace Vanguard.UI
         private float sparkAccumulator;
         private float sparkleStrength;
 
+        /// <summary>Hệ số scale từ hiệu ứng xuất hiện (UpgradeModalAnimator), nhân với scale hover.</summary>
+        public float EntryScale { get; set; } = 1f;
+
         public void Configure(Image image, Material material, float inset)
         {
             glowImage = image;
@@ -86,6 +89,7 @@ namespace Vanguard.UI
         {
             hover = 0f;
             pointerInside = false;
+            EntryScale = 1f;
             if (selfRect != null) selfRect.localScale = Vector3.one;
         }
 
@@ -152,7 +156,7 @@ namespace Vanguard.UI
 
             if (selfRect != null)
             {
-                float s = Mathf.Lerp(1f, hoverScale, hover);
+                float s = Mathf.Lerp(1f, hoverScale, hover) * EntryScale;
                 selfRect.localScale = new Vector3(s, s, 1f);
             }
 

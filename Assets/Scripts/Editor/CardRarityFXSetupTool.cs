@@ -15,6 +15,7 @@ namespace Vanguard.EditorTools
     {
         private const string MaterialPath = "Assets/Materials/M_UICardGlow.mat";
         private const float Inset = 20f;
+        internal static readonly Vector2 CardSize = new Vector2(260f, 380f);
 
         [MenuItem("Vanguard/Graphics/Setup Card Rarity FX (8.6)")]
         public static void Setup()
@@ -47,7 +48,7 @@ namespace Vanguard.EditorTools
                 Undo.RecordObject(cardRect, "Restore card rect");
                 cardRect.anchorMin = cardRect.anchorMax = new Vector2(0.5f, 0.5f);
                 cardRect.pivot = new Vector2(0.5f, 0.5f);
-                cardRect.sizeDelta = new Vector2(220f, 340f);
+                cardRect.sizeDelta = CardSize;
                 cardRect.localScale = Vector3.one;
 
                 // Gốc thẻ vốn là Image viền phẳng -> tắt đi, thay bằng GlowFrame

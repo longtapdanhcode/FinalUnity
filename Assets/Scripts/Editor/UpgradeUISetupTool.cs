@@ -40,6 +40,9 @@ namespace Vanguard.EditorTools
             List<UpgradeCardSO> cards = LoadAllCards();
             ConfigureManager(modal, cardUIs, cards);
 
+            // Khung glow theo độ hiếm + hover cho từng thẻ (Card 8.6)
+            CardRarityFXSetupTool.Setup();
+
             var activeScene = EditorSceneManager.GetActiveScene();
             EditorSceneManager.MarkSceneDirty(activeScene);
             EditorSceneManager.SaveScene(activeScene);
@@ -91,19 +94,27 @@ namespace Vanguard.EditorTools
             GameObject modal = CreateUIObject(ModalName, canvasTransform);
             Stretch(modal.GetComponent<RectTransform>());
             Image dim = modal.AddComponent<Image>();
-            dim.color = new Color(0f, 0f, 0f, 0.8f);
+            dim.color = new Color(0.01f, 0.01f, 0.05f, 0.85f);
 
-            // Tiêu đề
-            TextMeshProUGUI title = CreateText(modal.transform, "TitleText", "CHỌN NÂNG CẤP HƯ VÔ", 56, FontStyle.Bold, Gold, TextAnchor.MiddleCenter);
+            // Tiêu đề + phụ đề
+            TextMeshProUGUI title = CreateText(modal.transform, "TitleText", "CHỌN NÂNG CẤP HƯ VÔ", 60, FontStyle.Bold,
+                new Color(1f, 0.93f, 0.8f, 1f), TextAnchor.MiddleCenter);
+            NeonUIKit.ApplyFx(title, NeonUIKit.TextFx.GlowGold);
+            title.characterSpacing = 4f;
             SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -90f), new Vector2(1200f, 90f));
+                new Vector2(0f, -80f), new Vector2(1400f, 90f));
+
+            TextMeshProUGUI subtitle = CreateText(modal.transform, "SubtitleText", "Chọn 1 trong 3 nâng cấp để tiếp tục", 26,
+                FontStyle.Normal, new Color(0.65f, 0.78f, 1f, 1f), TextAnchor.MiddleCenter);
+            SetRect(subtitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -150f), new Vector2(1000f, 40f));
 
             // Khung chứa 3 thẻ bài
             GameObject container = CreateUIObject("CardsContainer", modal.transform);
             SetRect(container.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(0.5f, 0.5f), new Vector2(0f, -20f), new Vector2(1000f, 380f));
+                new Vector2(0.5f, 0.5f), new Vector2(0f, -40f), new Vector2(1100f, 440f));
             HorizontalLayoutGroup layout = container.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 50f;
+            layout.spacing = 70f;
             layout.childAlignment = TextAnchor.MiddleCenter;
             layout.childControlWidth = false;
             layout.childControlHeight = false;
@@ -116,77 +127,77 @@ namespace Vanguard.EditorTools
                 cardUIs.Add(BuildCard(container.transform, i));
             }
 
+            modal.AddComponent<UpgradeModalAnimator>();
             return modal;
         }
 
         private static UpgradeCardUI BuildCard(Transform parent, int index)
         {
-            // Gốc thẻ = viền (đổi màu theo phẩm chất)
+            // Gốc thẻ chỉ là RectTransform; khung glow ("GlowFrame") do CardRarityFXSetupTool thêm bên dưới cùng
             GameObject card = CreateUIObject($"Card_{index + 1}", parent);
             SetRect(card.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(220f, 340f));
-            Image border = card.AddComponent<Image>();
-            border.color = Color.white;
-            border.raycastTarget = false;
+                new Vector2(0.5f, 0.5f), Vector2.zero, CardRarityFXSetupTool.CardSize);
 
-            // Nền thẻ thụt vào 4px để lộ viền
-            GameObject inner = CreateUIObject("Background", card.transform);
-            RectTransform innerRect = inner.GetComponent<RectTransform>();
-            Stretch(innerRect);
-            innerRect.offsetMin = new Vector2(4f, 4f);
-            innerRect.offsetMax = new Vector2(-4f, -4f);
-            Image innerImage = inner.AddComponent<Image>();
-            innerImage.color = PanelDark;
-            innerImage.raycastTarget = false;
+            Vector2 top = new Vector2(0.5f, 1f);
 
             // Icon
             GameObject iconObj = CreateUIObject("Icon", card.transform);
-            SetRect(iconObj.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0.5f, 1f), new Vector2(0f, -20f), new Vector2(90f, 90f));
+            SetRect(iconObj.GetComponent<RectTransform>(), top, top, top, new Vector2(0f, -30f), new Vector2(100f, 100f));
             Image icon = iconObj.AddComponent<Image>();
             icon.raycastTarget = false;
             icon.preserveAspect = true;
 
             // Tên thẻ
-            TextMeshProUGUI titleText = CreateText(card.transform, "TitleText", "Tên thẻ", 22, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
-            SetRect(titleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -118f), new Vector2(200f, 36f));
+            TextMeshProUGUI titleText = CreateText(card.transform, "TitleText", "Tên thẻ", 28, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            titleText.enableAutoSizing = true;
+            titleText.fontSizeMin = 18f;
+            titleText.fontSizeMax = 28f;
+            SetRect(titleText.rectTransform, top, top, top, new Vector2(0f, -144f), new Vector2(232f, 44f));
 
             // Phẩm chất
-            TextMeshProUGUI rarityText = CreateText(card.transform, "RarityText", "THƯỜNG", 15, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
-            SetRect(rarityText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -154f), new Vector2(200f, 22f));
+            TextMeshProUGUI rarityText = CreateText(card.transform, "RarityText", "THƯỜNG", 17, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            rarityText.characterSpacing = 6f;
+            SetRect(rarityText.rectTransform, top, top, top, new Vector2(0f, -190f), new Vector2(232f, 26f));
+
+            // Đường kẻ phân cách
+            GameObject divider = CreateUIObject("Divider", card.transform);
+            SetRect(divider.GetComponent<RectTransform>(), top, top, top, new Vector2(0f, -224f), new Vector2(170f, 2f));
+            Image dividerImage = divider.AddComponent<Image>();
+            dividerImage.color = new Color(1f, 1f, 1f, 0.22f);
+            dividerImage.raycastTarget = false;
 
             // Mô tả hiệu ứng
-            TextMeshProUGUI descText = CreateText(card.transform, "DescriptionText", "Mô tả", 17, FontStyle.Normal,
-                new Color(0.85f, 0.85f, 0.9f, 1f), TextAnchor.UpperCenter);
-            SetRect(descText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -184f), new Vector2(190f, 90f));
+            TextMeshProUGUI descText = CreateText(card.transform, "DescriptionText", "Mô tả", 19, FontStyle.Normal,
+                new Color(0.86f, 0.9f, 1f, 1f), TextAnchor.UpperCenter);
+            descText.enableAutoSizing = true;
+            descText.fontSizeMin = 14f;
+            descText.fontSizeMax = 19f;
+            SetRect(descText.rectTransform, top, top, top, new Vector2(0f, -238f), new Vector2(222f, 96f));
 
-            // Nút chọn
+            // Nút chọn: nền trong suốt nhận click + khung neon + hover
             GameObject buttonObj = CreateUIObject("SelectButton", card.transform);
-            SetRect(buttonObj.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(160f, 40f));
+            Vector2 bottom = new Vector2(0.5f, 0f);
+            SetRect(buttonObj.GetComponent<RectTransform>(), bottom, bottom, bottom, new Vector2(0f, 20f), new Vector2(180f, 44f));
             Image buttonImage = buttonObj.AddComponent<Image>();
-            buttonImage.color = new Color(0.25f, 0.2f, 0.4f, 1f);
+            buttonImage.color = new Color(1f, 1f, 1f, 0.01f);
             Button button = buttonObj.AddComponent<Button>();
             button.targetGraphic = buttonImage;
-            ColorBlock colors = button.colors;
-            colors.highlightedColor = new Color(0.6f, 0.45f, 1f, 1f);
-            colors.pressedColor = new Color(0.4f, 0.3f, 0.7f, 1f);
-            button.colors = colors;
+            button.transition = Selectable.Transition.None;
 
-            TextMeshProUGUI buttonLabel = CreateText(buttonObj.transform, "Label", "CHỌN", 20, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            NeonPanelFX buttonFx = NeonUIKit.AddPanel(buttonObj.transform, NeonUIKit.Magenta, 10f, 0.55f, 6f);
+            buttonObj.AddComponent<NeonButtonHover>().Configure(buttonFx);
+
+            TextMeshProUGUI buttonLabel = CreateText(buttonObj.transform, "Label", "CHỌN", 22, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            buttonLabel.characterSpacing = 4f;
             Stretch(buttonLabel.rectTransform);
 
-            // Gắn UpgradeCardUI và nối tham chiếu
+            // Gắn UpgradeCardUI và nối tham chiếu (borderImage sẽ được CardRarityFXSetupTool gán vào GlowFrame)
             UpgradeCardUI cardUI = card.AddComponent<UpgradeCardUI>();
             SerializedObject so = new SerializedObject(cardUI);
             so.FindProperty("titleText").objectReferenceValue = titleText;
             so.FindProperty("descriptionText").objectReferenceValue = descText;
             so.FindProperty("rarityText").objectReferenceValue = rarityText;
             so.FindProperty("iconImage").objectReferenceValue = icon;
-            so.FindProperty("borderImage").objectReferenceValue = border;
             so.FindProperty("selectButton").objectReferenceValue = button;
             so.ApplyModifiedPropertiesWithoutUndo();
 

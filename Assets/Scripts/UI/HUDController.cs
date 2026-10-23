@@ -111,8 +111,12 @@ namespace Vanguard.UI
             // Dùng unscaledDeltaTime để thanh vẫn mượt khi Hit-Stop / mở menu
             float t = 1f - Mathf.Exp(-sliderSmoothSpeed * Time.unscaledDeltaTime);
 
-            if (hpSlider != null) hpSlider.value = Mathf.Lerp(hpSlider.value, targetHp, t);
-            if (enemyRemainingSlider != null)
+            // Chỉ ghi value khi còn lệch: Slider.value setter đánh dấu dirty UI -> rebuild canvas
+            if (hpSlider != null && !Mathf.Approximately(hpSlider.value, targetHp))
+            {
+                hpSlider.value = Mathf.Lerp(hpSlider.value, targetHp, t);
+            }
+            if (enemyRemainingSlider != null && !Mathf.Approximately(enemyRemainingSlider.value, targetEnemyFill))
             {
                 enemyRemainingSlider.value = Mathf.Lerp(enemyRemainingSlider.value, targetEnemyFill, t);
             }
@@ -155,24 +159,18 @@ namespace Vanguard.UI
                 Image icon = dashChargeIcons[i];
                 if (icon == null) continue;
 
-                icon.enabled = i < max;
-                if (i < charges)
-                {
-                    // Sẵn sàng: ngọc bích sáng
-                    icon.fillAmount = 1f;
-                    icon.color = dashReadyColor;
-                }
-                else if (i == charges)
-                {
-                    // Đang nạp: lấp đầy dần theo thời gian hồi
-                    icon.fillAmount = progress;
-                    icon.color = dashChargingColor;
-                }
-                else
-                {
-                    icon.fillAmount = 0f;
-                    icon.color = dashChargingColor;
-                }
+                bool on = i < max;
+                if (icon.enabled != on) icon.enabled = on;
+
+                float fill;
+                Color col;
+                if (i < charges) { fill = 1f; col = dashReadyColor; }          // Sẵn sàng: ngọc bích sáng
+                else if (i == charges) { fill = progress; col = dashChargingColor; } // Đang nạp
+                else { fill = 0f; col = dashChargingColor; }
+
+                // Image setter chỉ đánh dấu dirty khi giá trị đổi, nhưng tránh gọi thừa mỗi frame
+                if (!Mathf.Approximately(icon.fillAmount, fill)) icon.fillAmount = fill;
+                if (icon.color != col) icon.color = col;
             }
         }
         #endregion

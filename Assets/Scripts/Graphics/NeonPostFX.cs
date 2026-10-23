@@ -42,6 +42,14 @@ namespace Vanguard.Graphics
             set { if (bloom != null) bloom.highQualityFiltering.Override(value); }
         }
 
+        /// <summary>Giảm chi phí Bloom (số mip + độ phân giải bắt đầu) cho GPU tầm trung.</summary>
+        public void SetBloomCost(bool quarterResolution, int maxIterations)
+        {
+            if (bloom == null) return;
+            bloom.downscale.Override(quarterResolution ? BloomDownscaleMode.Quarter : BloomDownscaleMode.Half);
+            bloom.maxIterations.Override(Mathf.Clamp(maxIterations, 1, 8));
+        }
+
         public bool PostProcessingEnabled
         {
             get => postProcessingEnabled;

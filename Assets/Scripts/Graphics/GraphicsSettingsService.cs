@@ -27,13 +27,15 @@ namespace Vanguard.Graphics
             public int shadowCascades;
             public int shadowResolution;
             public int maxAdditionalLights;
+            public bool bloomQuarter;
+            public int bloomIterations;
         }
 
         private static readonly TierPreset[] Presets =
         {
-            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false, shadowCascades = 1, shadowResolution = 1024, maxAdditionalLights = 0 },
-            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false, shadowCascades = 2, shadowResolution = 2048, maxAdditionalLights = 2 },
-            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true, shadowCascades = 4, shadowResolution = 2048, maxAdditionalLights = 4 },
+            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false, shadowCascades = 1, shadowResolution = 1024, maxAdditionalLights = 0, bloomQuarter = true, bloomIterations = 4 },
+            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false, shadowCascades = 2, shadowResolution = 2048, maxAdditionalLights = 2, bloomQuarter = true, bloomIterations = 5 },
+            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true, shadowCascades = 4, shadowResolution = 2048, maxAdditionalLights = 4, bloomQuarter = false, bloomIterations = 6 },
         };
 
         private static bool hasBackup;
@@ -117,6 +119,7 @@ namespace Vanguard.Graphics
             {
                 fx.PostProcessingEnabled = PostProcessing;
                 fx.HighQualityBloom = preset.hqBloom;
+                fx.SetBloomCost(preset.bloomQuarter, preset.bloomIterations);
             }
 
             Changed?.Invoke();

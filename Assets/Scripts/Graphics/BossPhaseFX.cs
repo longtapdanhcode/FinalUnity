@@ -91,6 +91,7 @@ namespace Vanguard.Graphics
             {
                 SkinnedMeshRenderer r = renderers[i];
                 if (r == null) continue;
+                // Giữ Get để không xoá Flash/Dissolve do NeonModelFX ghi chung trên renderer này
                 r.GetPropertyBlock(block);
                 block.SetColor(EmissionId, emission);
                 block.SetColor(RimId, rim);

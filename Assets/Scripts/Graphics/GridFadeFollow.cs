@@ -15,6 +15,7 @@ namespace Vanguard.Graphics
 
         private Renderer rend;
         private MaterialPropertyBlock block;
+        private Vector2 lastXZ = new Vector2(float.NaN, float.NaN);
 
         private void Awake()
         {
@@ -30,8 +31,12 @@ namespace Vanguard.Graphics
         private void LateUpdate()
         {
             if (target == null) return;
+            Vector3 p = target.position;
+            // Chỉ cập nhật khi Player thực sự di chuyển -> tránh SetPropertyBlock mỗi frame
+            if ((lastXZ.x - p.x) * (lastXZ.x - p.x) + (lastXZ.y - p.z) * (lastXZ.y - p.z) < 0.0001f) return;
+            lastXZ = new Vector2(p.x, p.z);
             rend.GetPropertyBlock(block);
-            block.SetVector(FadeCenterId, new Vector4(target.position.x, 0f, target.position.z, 0f));
+            block.SetVector(FadeCenterId, new Vector4(p.x, 0f, p.z, 0f));
             rend.SetPropertyBlock(block);
         }
     }

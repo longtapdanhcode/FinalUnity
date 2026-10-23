@@ -11,6 +11,8 @@ namespace Vanguard.Graphics
     {
         private Animator animator;
         private int currentHash;
+        private string lastName;
+        private int lastNameHash;
         private float lockUntil;
 
         public Animator Animator => animator != null ? animator : (animator = GetComponent<Animator>());
@@ -27,7 +29,13 @@ namespace Vanguard.Graphics
             if (Animator == null || Animator.runtimeAnimatorController == null) return;
             if (!force && IsLocked) return;
 
-            int hash = Animator.StringToHash(stateName);
+            // Tên state là hằng chuỗi (interned) nên so sánh tham chiếu đủ để bỏ qua hash lại mỗi frame
+            if (!ReferenceEquals(stateName, lastName))
+            {
+                lastName = stateName;
+                lastNameHash = Animator.StringToHash(stateName);
+            }
+            int hash = lastNameHash;
             if (!force && hash == currentHash && lockDuration <= 0f) return;
 
             currentHash = hash;

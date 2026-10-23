@@ -17,6 +17,7 @@ namespace Vanguard.Graphics
         private Renderer[] renderers;
         private MaterialPropertyBlock block;
         private Coroutine routine;
+        private Color[] edgeColors;
 
         private void Awake()
         {
@@ -45,14 +46,15 @@ namespace Vanguard.Graphics
         {
             if (routine != null) { StopCoroutine(routine); routine = null; }
             if (renderers == null) return;
-            foreach (Renderer r in renderers) if (r != null) r.SetPropertyBlock(null);
+            ClearBlocks();
         }
 
         private IEnumerator FlashRoutine(float duration)
         {
             SetFloat(FlashId, 1f);
             yield return new WaitForSecondsRealtime(duration);
-            SetFloat(FlashId, 0f);
+            // Xoá block để renderer quay lại đường SRP Batcher thay vì giữ MPB vĩnh viễn
+            ClearBlocks();
             routine = null;
         }
 
@@ -60,6 +62,7 @@ namespace Vanguard.Graphics
         {
             if (delay > 0f) yield return new WaitForSeconds(delay);
 
+            CacheEdgeColors();
             float t = 0f;
             duration = Mathf.Max(0.01f, duration);
             while (t < duration)
@@ -68,14 +71,33 @@ namespace Vanguard.Graphics
                 SetDissolve(Mathf.Clamp01(t / duration));
                 yield return null;
             }
+            CacheEdgeColors();
             SetDissolve(1f);
             routine = null;
         }
 
+        private void ClearBlocks()
+        {
+            if (renderers == null) return;
+            for (int i = 0; i < renderers.Length; i++) if (renderers[i] != null) renderers[i].SetPropertyBlock(null);
+        }
+
+        private void CacheEdgeColors()
+        {
+            if (edgeColors != null && edgeColors.Length == renderers.Length) { return; }
+            edgeColors = new Color[renderers.Length];
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material m = renderers[i] != null ? renderers[i].sharedMaterial : null;
+                edgeColors[i] = m != null && m.HasProperty(RimId) ? m.GetColor(RimId) * 2f : Color.white;
+            }
+        }
+
         private void SetFloat(int id, float value)
         {
-            foreach (Renderer r in renderers)
+            for (int i = 0; i < renderers.Length; i++)
             {
+                Renderer r = renderers[i];
                 if (r == null) continue;
                 r.GetPropertyBlock(block);
                 block.SetFloat(id, value);
@@ -85,13 +107,13 @@ namespace Vanguard.Graphics
 
         private void SetDissolve(float amount)
         {
-            foreach (Renderer r in renderers)
+            for (int i = 0; i < renderers.Length; i++)
             {
+                Renderer r = renderers[i];
                 if (r == null) continue;
                 r.GetPropertyBlock(block);
                 block.SetFloat(DissolveId, amount);
-                Material m = r.sharedMaterial;
-                if (m != null && m.HasProperty(RimId)) block.SetColor(EdgeColorId, m.GetColor(RimId) * 2f);
+                block.SetColor(EdgeColorId, edgeColors[i]);
                 r.SetPropertyBlock(block);
             }
         }

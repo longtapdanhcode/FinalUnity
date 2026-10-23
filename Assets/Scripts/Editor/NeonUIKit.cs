@@ -63,7 +63,6 @@ namespace Vanguard.EditorTools
             Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (existing != null) return existing;
 
-            ShaderUtilities.GetShaderPropertyIDs();
             Material m = new Material(font.material) { name = $"{font.name} - {fx}" };
 
             m.EnableKeyword(ShaderUtilities.Keyword_Outline);

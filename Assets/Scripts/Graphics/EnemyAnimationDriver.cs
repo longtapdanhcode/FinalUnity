@@ -10,17 +10,22 @@ namespace Vanguard.Graphics
     [RequireComponent(typeof(EnemyBase))]
     public class EnemyAnimationDriver : MonoBehaviour
     {
-        private const string Idle = "Idle", Move = "Move", Attack = "Attack", Hit = "Hit", Death = "Death";
+        private const string Idle = "Idle", Move = "Move", Attack = "Attack", Cast = "Cast", Hit = "Hit", Death = "Death";
 
         [SerializeField] private StateAnimator model = null;
         [SerializeField, Min(0.1f)] private float attackLock = 0.9f;
+        [SerializeField, Min(0.1f)] private float castLock = 1.5f;
         [SerializeField, Min(0.05f)] private float hitLock = 0.3f;
+        [Tooltip("Khoảng cách tối thiểu giữa 2 lần phát animation Hit (boss nên để lớn để không giật liên tục)")]
+        [SerializeField, Min(0f)] private float minHitInterval = 0f;
 
         private NeonModelFX fx;
         private EnemyBase enemy;
         private EnemyState lastState = EnemyState.Idle;
         private float lastHealth;
         private bool deathPlayed;
+        private bool lastCast;
+        private float nextHitTime;
 
         private void Awake()
         {
@@ -38,6 +43,8 @@ namespace Vanguard.Graphics
             enemy.OnEnemyHealthChanged += HandleHealthChanged;
             deathPlayed = false;
             lastState = EnemyState.Idle;
+            lastCast = false;
+            nextHitTime = 0f;
             lastHealth = enemy.CurrentHealth;
             if (model != null) model.ResetState(Idle);
             if (fx != null) fx.ResetFX();
@@ -52,8 +59,10 @@ namespace Vanguard.Graphics
         {
             bool tookDamage = current < lastHealth && current > 0f;
             lastHealth = current;
-            if (tookDamage && model != null && !deathPlayed)
+            bool busy = enemy.CurrentState == EnemyState.Slamming || enemy.CurrentState == EnemyState.Casting;
+            if (tookDamage && model != null && !deathPlayed && !busy && Time.time >= nextHitTime)
             {
+                nextHitTime = Time.time + minHitInterval;
                 model.Play(Hit, 0.04f, 0f, hitLock, true);
             }
         }
@@ -77,11 +86,14 @@ namespace Vanguard.Graphics
 
             EnemyState state = enemy.CurrentState;
             bool attacking = state == EnemyState.Attack || state == EnemyState.Slamming || state == EnemyState.Casting;
-            if (attacking && lastState != state)
+            bool cast = state == EnemyState.Casting && enemy is VoidWardenBoss warden && warden.UseCastAnimation;
+            if (attacking && (lastState != state || cast != lastCast))
             {
-                model.Play(Attack, 0.08f, 0f, attackLock, true);
+                if (cast) model.Play(Cast, 0.1f, 0f, castLock, true);
+                else model.Play(Attack, 0.08f, 0f, attackLock, true);
             }
             lastState = state;
+            lastCast = cast;
 
             if (state == EnemyState.Stunned) model.Play(Idle, 0.1f);
             else if (state == EnemyState.Chase) model.Play(Move, 0.12f);

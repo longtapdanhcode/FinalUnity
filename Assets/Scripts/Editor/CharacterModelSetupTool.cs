@@ -30,6 +30,9 @@ namespace Vanguard.EditorTools
         {
             public string id, folder, mainFile, targetPath;
             public bool isPlayer;
+            public bool isBoss;
+            public float attackLock = 0.9f, castLock = 1.5f, minHitInterval = 0f, deathLinger = 1.2f, alertIntensity = 3f, alertRise = 2.5f;
+            public string rootBone;
             public float height;
             public string[] loopClips;
             public StateSpec[] states;
@@ -83,10 +86,41 @@ namespace Vanguard.EditorTools
                     new StateSpec("Attack", "Charge", 1.0f), new StateSpec("Hit", "Run", 0.3f), new StateSpec("Death", "Explode", 1.0f),
                 }
             },
+            new CharSpec
+            {
+                id = "Gargoyle", folder = "GargoyleBoss", mainFile = "Gargoyle Boss", targetPath = "Assets/Prefabs/Enemies/Gargoyle.prefab",
+                height = 4.5f, isBoss = true, attackLock = 1.8f, minHitInterval = 0.8f, deathLinger = 2.8f, alertIntensity = 3.5f, alertRise = 0.9f,
+                loopClips = new[] { "Idle_Gargoyle Boss", "Walk_Gargoyle Boss" },
+                color = p => p.hazardOrange,
+                states = new[]
+                {
+                    new StateSpec("Idle", "Idle_Gargoyle Boss", 0), new StateSpec("Move", "Walk_Gargoyle Boss", 0),
+                    new StateSpec("Attack", "Attack_Gargoyle Boss", 1.8f), new StateSpec("Hit", "Hit_Gargoyle Boss", 0.4f),
+                    new StateSpec("Death", "Death_Gargoyle Boss", 2.4f),
+                }
+            },
+            new CharSpec
+            {
+                id = "VoidWarden", folder = "VoidWardenBoss", mainFile = "Void Warden Boss", targetPath = "Assets/Prefabs/Enemies/VoidWarden.prefab",
+                height = 5.5f, isBoss = true, attackLock = 1.6f, castLock = 2.2f, minHitInterval = 0.8f, deathLinger = 3.2f, alertIntensity = 3.2f, alertRise = 2.5f,
+                loopClips = new[] { "Idle_Void Warden Boss", "Walk_Void Warden Boss" },
+                color = p => p.bossMagenta,
+                states = new[]
+                {
+                    new StateSpec("Idle", "Idle_Void Warden Boss", 0), new StateSpec("Move", "Walk_Void Warden Boss", 0),
+                    new StateSpec("Attack", "Attack_Void Warden Boss", 1.6f), new StateSpec("Cast", "Cast_Void Warden Boss", 2.2f),
+                    new StateSpec("Hit", "Hit_Void Warden Boss", 0.4f), new StateSpec("Death", "Death_Void Warden Boss", 2.8f),
+                }
+            },
         };
 
         [MenuItem("Vanguard/Graphics/Setup Character Models")]
-        public static void SetupAll()
+        public static void SetupAll() { Run(false); }
+
+        [MenuItem("Vanguard/Graphics/Setup Boss Models (8.5)")]
+        public static void SetupBosses() { Run(true); }
+
+        private static void Run(bool bosses)
         {
             ArtPaletteSO palette = AssetDatabase.LoadAssetAtPath<ArtPaletteSO>("Assets/Data/ArtPalette.asset");
             if (palette == null) palette = ScriptableObject.CreateInstance<ArtPaletteSO>();
@@ -98,6 +132,7 @@ namespace Vanguard.EditorTools
 
             foreach (CharSpec spec in Specs)
             {
+                if (spec.isBoss != bosses) continue;
                 string mainPath = $"Assets/Models/{spec.folder}/{spec.mainFile}.fbx";
                 GameObject mainAsset = AssetDatabase.LoadAssetAtPath<GameObject>(mainPath);
                 if (mainAsset == null) { Debug.LogError($"[CharModels] Thiếu {mainPath}"); continue; }
@@ -257,6 +292,13 @@ namespace Vanguard.EditorTools
             Transform old = root.transform.Find("Model");
             if (old != null) Object.DestroyImmediate(old.gameObject);
 
+            if (spec.isBoss)
+            {
+                // Bỏ khối placeholder "Visual" của boss
+                Transform visual = root.transform.Find("Visual");
+                if (visual != null) Object.DestroyImmediate(visual.gameObject);
+            }
+
             // Gỡ mesh placeholder trên root (giữ Collider/Rigidbody/NavMeshAgent)
             MeshRenderer placeholderRenderer = root.GetComponent<MeshRenderer>();
             if (placeholderRenderer != null) Object.DestroyImmediate(placeholderRenderer);
@@ -290,6 +332,30 @@ namespace Vanguard.EditorTools
             model.transform.localPosition = new Vector3(0f, bottom - assetMinY * s / rs.y, 0f);
             model.transform.localRotation = Quaternion.identity;
 
+            if (spec.isBoss)
+            {
+                float rootScaleY = Mathf.Max(0.01f, root.transform.lossyScale.y);
+                foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name != "HealthBarCanvas") continue;
+                    float top = bottom + spec.height / rootScaleY;
+                    t.localPosition = new Vector3(t.localPosition.x, top + 0.8f / rootScaleY, t.localPosition.z);
+                }
+
+                Vanguard.Enemy.VoidWardenBoss warden = root.GetComponent<Vanguard.Enemy.VoidWardenBoss>();
+                if (warden != null)
+                {
+                    SerializedObject wso = new SerializedObject(warden);
+                    wso.FindProperty("armorRenderer").objectReferenceValue = null; // màu pha do BossPhaseFX điều khiển
+                    wso.ApplyModifiedPropertiesWithoutUndo();
+                }
+
+                BossPhaseFX phaseFx = root.GetComponent<BossPhaseFX>();
+                if (phaseFx == null) phaseFx = root.AddComponent<BossPhaseFX>();
+                phaseFx.Configure(spec.color(AssetDatabase.LoadAssetAtPath<ArtPaletteSO>("Assets/Data/ArtPalette.asset")), spec.alertIntensity, spec.alertRise);
+                EditorUtility.SetDirty(phaseFx);
+            }
+
             if (spec.isPlayer)
             {
                 PlayerAnimationDriver driver = root.GetComponent<PlayerAnimationDriver>();
@@ -301,15 +367,25 @@ namespace Vanguard.EditorTools
                 EnemyAnimationDriver driver = root.GetComponent<EnemyAnimationDriver>();
                 if (driver == null) driver = root.AddComponent<EnemyAnimationDriver>();
                 SetRef(driver, "model", stateAnimator);
+                SetFloat(driver, "attackLock", spec.attackLock);
+                SetFloat(driver, "castLock", spec.castLock);
+                SetFloat(driver, "minHitInterval", spec.minHitInterval);
 
                 Vanguard.Enemy.EnemyBase enemy = root.GetComponent<Vanguard.Enemy.EnemyBase>();
                 if (enemy != null)
                 {
                     SerializedObject so = new SerializedObject(enemy);
                     SerializedProperty linger = so.FindProperty("deathLingerTime");
-                    if (linger != null) { linger.floatValue = 1.2f; so.ApplyModifiedPropertiesWithoutUndo(); }
+                    if (linger != null) { linger.floatValue = spec.deathLinger; so.ApplyModifiedPropertiesWithoutUndo(); }
                 }
             }
+        }
+
+        private static void SetFloat(Object target, string field, float value)
+        {
+            SerializedObject so = new SerializedObject(target);
+            SerializedProperty p = so.FindProperty(field);
+            if (p != null) { p.floatValue = value; so.ApplyModifiedPropertiesWithoutUndo(); }
         }
 
         private static void SetRef(Object target, string field, Object value)

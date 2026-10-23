@@ -110,6 +110,8 @@ namespace Vanguard.Enemy
 
         public bool IsPhase2 => isPhase2;
         public bool IsCasting => CurrentState == EnemyState.Casting;
+        /// <summary>True khi kỹ năng đang thi triển dùng animation Cast (Mưa Thiên Thạch / hú chuyển Phase); false = Attack.</summary>
+        public bool UseCastAnimation { get; private set; }
 
         protected override void Awake()
         {
@@ -214,6 +216,7 @@ namespace Vanguard.Enemy
         #region Skill 1: Triple Arc Slash
         private IEnumerator TripleSlashRoutine()
         {
+            UseCastAnimation = false;
             ChangeState(EnemyState.Casting);
 
             for (int i = 0; i < arcSlashCount; i++)
@@ -276,6 +279,7 @@ namespace Vanguard.Enemy
         #region Skill 2: Void Vortex & Ground Blast
         private IEnumerator VortexBlastRoutine()
         {
+            UseCastAnimation = false;
             ChangeState(EnemyState.Casting);
             EnsurePlayerRefs();
 
@@ -371,6 +375,7 @@ namespace Vanguard.Enemy
         #region Skill 3: Astral Meteor Rain (Phase 2)
         private IEnumerator MeteorRainRoutine()
         {
+            UseCastAnimation = true;
             ChangeState(EnemyState.Casting);
             Debug.Log("[VoidWarden] Gầm vang! Mưa Thiên Thạch Hư Vô!");
 
@@ -449,6 +454,7 @@ namespace Vanguard.Enemy
 
         private IEnumerator Phase2TransitionRoutine()
         {
+            UseCastAnimation = true;
             ChangeState(EnemyState.Casting);
             Debug.Log("[VoidWarden] PHASE 2: Cuồng Bạo Hư Vô!");
 

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using Vanguard.Cards;
 
@@ -11,9 +12,9 @@ namespace Vanguard.UI
     public class UpgradeCardUI : MonoBehaviour
     {
         [Header("Texts")]
-        [SerializeField] private Text titleText = null;
-        [SerializeField] private Text descriptionText = null;
-        [SerializeField] private Text rarityText = null;
+        [SerializeField] private TMP_Text titleText = null;
+        [SerializeField] private TMP_Text descriptionText = null;
+        [SerializeField] private TMP_Text rarityText = null;
 
         [Header("Images")]
         [SerializeField] private Image iconImage = null;

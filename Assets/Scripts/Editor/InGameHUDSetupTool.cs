@@ -1,4 +1,5 @@
 using System.IO;
+using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,12 +18,12 @@ namespace Vanguard.EditorTools
         private const string CircleSpritePath = "Assets/Sprites/UI/HUD_Circle.png";
         private const int DashSlots = 2;
 
-        private static readonly Color MetalColor = new Color(0.32f, 0.33f, 0.38f, 1f);
+        private static readonly Color MetalColor = new Color(0.1f, 0.85f, 1f, 1f);
         private static readonly Color PanelDark = new Color(0.07f, 0.07f, 0.1f, 0.92f);
-        private static readonly Color GoldFrame = new Color(0.85f, 0.65f, 0.15f, 1f);
-        private static readonly Color GoldText = new Color(1f, 0.82f, 0.3f, 1f);
-        private static readonly Color HpColor = new Color(0.95f, 0.22f, 0.12f, 1f);
-        private static readonly Color VoidPurple = new Color(0.6f, 0.2f, 0.9f, 1f);
+        private static readonly Color GoldFrame = new Color(0.8f, 0.3f, 1f, 1f);
+        private static readonly Color GoldText = new Color(0.95f, 0.88f, 1f, 1f);
+        private static readonly Color HpColor = new Color(1f, 0.2f, 0.32f, 1f);
+        private static readonly Color VoidPurple = new Color(0.7f, 0.3f, 1f, 1f);
 
         [MenuItem("Vanguard/Setup In-Game HUD")]
         public static void Setup()
@@ -50,13 +51,12 @@ namespace Vanguard.EditorTools
             Slider hpSlider = BuildSlider(topLeft.transform, "HPSlider", new Vector2(0f, 1f), new Vector2(20f, -16f),
                 new Vector2(400f, 34f), new Color(0.2f, 0.04f, 0.04f, 1f), HpColor);
 
-            Text hpText = UpgradeUISetupTool.CreateText(topLeft.transform, "HPText", "100 / 100 HP", 22, FontStyle.Bold,
+            TextMeshProUGUI hpText = UpgradeUISetupTool.CreateText(topLeft.transform, "HPText", "100 / 100 HP", 22, FontStyle.Bold,
                 Color.white, TextAnchor.MiddleCenter);
             UpgradeUISetupTool.SetRect(hpText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
                 new Vector2(20f, -16f), new Vector2(400f, 34f));
-            hpText.gameObject.AddComponent<Outline>().effectColor = Color.black;
 
-            Text dashLabel = UpgradeUISetupTool.CreateText(topLeft.transform, "DashLabel", "DASH", 16, FontStyle.Bold,
+            TextMeshProUGUI dashLabel = UpgradeUISetupTool.CreateText(topLeft.transform, "DashLabel", "DASH", 16, FontStyle.Bold,
                 new Color(0.7f, 0.9f, 0.9f, 1f), TextAnchor.MiddleLeft);
             UpgradeUISetupTool.SetRect(dashLabel.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
                 new Vector2(130f, -76f), new Vector2(80f, 40f));
@@ -71,16 +71,16 @@ namespace Vanguard.EditorTools
             GameObject topCenter = BuildPanel(root.transform, "TopCenterHUD", new Vector2(0.5f, 1f), new Vector2(0f, -30f),
                 new Vector2(560f, 130f), GoldFrame);
 
-            Text waveText = UpgradeUISetupTool.CreateText(topCenter.transform, "WaveNumberText", "WAVE 01/10", 38,
+            TextMeshProUGUI waveText = UpgradeUISetupTool.CreateText(topCenter.transform, "WaveNumberText", "WAVE 01/10", 38,
                 FontStyle.Bold, GoldText, TextAnchor.MiddleCenter);
             UpgradeUISetupTool.SetRect(waveText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f), new Vector2(0f, -12f), new Vector2(540f, 50f));
-            waveText.gameObject.AddComponent<Outline>().effectColor = Color.black;
+            NeonUIKit.ApplyFx(waveText, NeonUIKit.TextFx.GlowMagenta);
 
             Slider enemySlider = BuildSlider(topCenter.transform, "EnemyRemainingSlider", new Vector2(0.5f, 1f),
                 new Vector2(0f, -70f), new Vector2(460f, 22f), new Color(0.12f, 0.04f, 0.18f, 1f), VoidPurple);
 
-            Text enemyText = UpgradeUISetupTool.CreateText(topCenter.transform, "EnemyRemainingText", "Quái còn lại: 0 / 0", 20,
+            TextMeshProUGUI enemyText = UpgradeUISetupTool.CreateText(topCenter.transform, "EnemyRemainingText", "Quái còn lại: 0 / 0", 20,
                 FontStyle.Bold, new Color(0.88f, 0.8f, 1f, 1f), TextAnchor.MiddleCenter);
             UpgradeUISetupTool.SetRect(enemyText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f), new Vector2(0f, -96f), new Vector2(540f, 28f));
@@ -128,27 +128,13 @@ namespace Vanguard.EditorTools
             scaler.matchWidthOrHeight = 0.5f;
         }
 
-        /// <summary>
-        /// Khung viền kim loại + nền tối bên trong (viền dày 3px).
-        /// </summary>
+        /// <summary>Panel kính tối + viền neon glow (shader Vanguard/UICardGlow).</summary>
         private static GameObject BuildPanel(Transform parent, string panelName, Vector2 anchor, Vector2 position,
             Vector2 size, Color frameColor)
         {
             GameObject panel = UpgradeUISetupTool.CreateUIObject(panelName, parent);
             UpgradeUISetupTool.SetRect(panel.GetComponent<RectTransform>(), anchor, anchor, anchor, position, size);
-            Image frame = panel.AddComponent<Image>();
-            frame.color = frameColor;
-            frame.raycastTarget = false;
-
-            GameObject inner = UpgradeUISetupTool.CreateUIObject("Inner", panel.transform);
-            RectTransform innerRect = inner.GetComponent<RectTransform>();
-            UpgradeUISetupTool.Stretch(innerRect);
-            innerRect.offsetMin = new Vector2(3f, 3f);
-            innerRect.offsetMax = new Vector2(-3f, -3f);
-            Image innerImage = inner.AddComponent<Image>();
-            innerImage.color = PanelDark;
-            innerImage.raycastTarget = false;
-
+            NeonUIKit.AddPanel(panel.transform, frameColor, 16f, 0.75f, 8f);
             return panel;
         }
 

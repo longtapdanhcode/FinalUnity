@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using Vanguard.Player;
 using Vanguard.Waves;
@@ -15,14 +16,14 @@ namespace Vanguard.UI
 
         [Header("Top-Left: Máu & Dash")]
         [SerializeField] private Slider hpSlider = null;
-        [SerializeField] private Text hpText = null;
+        [SerializeField] private TMP_Text hpText = null;
         [Tooltip("Ảnh lấp đầy của từng lượt Dash (Image Type = Filled Radial 360)")]
         [SerializeField] private Image[] dashChargeIcons = null;
 
         [Header("Top-Center: Wave & Quái")]
-        [SerializeField] private Text waveNumberText = null;
+        [SerializeField] private TMP_Text waveNumberText = null;
         [SerializeField] private Slider enemyRemainingSlider = null;
-        [SerializeField] private Text enemyRemainingText = null;
+        [SerializeField] private TMP_Text enemyRemainingText = null;
 
         [Header("Nguồn dữ liệu (tự tìm nếu để trống)")]
         [SerializeField] private PlayerHealth playerHealth = null;

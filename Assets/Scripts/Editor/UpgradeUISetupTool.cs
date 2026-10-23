@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -93,7 +94,7 @@ namespace Vanguard.EditorTools
             dim.color = new Color(0f, 0f, 0f, 0.8f);
 
             // Tiêu đề
-            Text title = CreateText(modal.transform, "TitleText", "CHỌN NÂNG CẤP HƯ VÔ", 56, FontStyle.Bold, Gold, TextAnchor.MiddleCenter);
+            TextMeshProUGUI title = CreateText(modal.transform, "TitleText", "CHỌN NÂNG CẤP HƯ VÔ", 56, FontStyle.Bold, Gold, TextAnchor.MiddleCenter);
             SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0f, -90f), new Vector2(1200f, 90f));
 
@@ -147,17 +148,17 @@ namespace Vanguard.EditorTools
             icon.preserveAspect = true;
 
             // Tên thẻ
-            Text titleText = CreateText(card.transform, "TitleText", "Tên thẻ", 22, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            TextMeshProUGUI titleText = CreateText(card.transform, "TitleText", "Tên thẻ", 22, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
             SetRect(titleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0f, -118f), new Vector2(200f, 36f));
 
             // Phẩm chất
-            Text rarityText = CreateText(card.transform, "RarityText", "THƯỜNG", 15, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            TextMeshProUGUI rarityText = CreateText(card.transform, "RarityText", "THƯỜNG", 15, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
             SetRect(rarityText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0f, -154f), new Vector2(200f, 22f));
 
             // Mô tả hiệu ứng
-            Text descText = CreateText(card.transform, "DescriptionText", "Mô tả", 17, FontStyle.Normal,
+            TextMeshProUGUI descText = CreateText(card.transform, "DescriptionText", "Mô tả", 17, FontStyle.Normal,
                 new Color(0.85f, 0.85f, 0.9f, 1f), TextAnchor.UpperCenter);
             SetRect(descText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0f, -184f), new Vector2(190f, 90f));
@@ -175,7 +176,7 @@ namespace Vanguard.EditorTools
             colors.pressedColor = new Color(0.4f, 0.3f, 0.7f, 1f);
             button.colors = colors;
 
-            Text buttonLabel = CreateText(buttonObj.transform, "Label", "CHỌN", 20, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
+            TextMeshProUGUI buttonLabel = CreateText(buttonObj.transform, "Label", "CHỌN", 20, FontStyle.Bold, Color.white, TextAnchor.MiddleCenter);
             Stretch(buttonLabel.rectTransform);
 
             // Gắn UpgradeCardUI và nối tham chiếu
@@ -258,21 +259,10 @@ namespace Vanguard.EditorTools
             return go;
         }
 
-        internal static Text CreateText(Transform parent, string objectName, string content, int fontSize,
+        internal static TextMeshProUGUI CreateText(Transform parent, string objectName, string content, int fontSize,
             FontStyle style, Color color, TextAnchor alignment)
         {
-            GameObject go = CreateUIObject(objectName, parent);
-            Text text = go.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.text = content;
-            text.fontSize = fontSize;
-            text.fontStyle = style;
-            text.color = color;
-            text.alignment = alignment;
-            text.horizontalOverflow = HorizontalWrapMode.Wrap;
-            text.verticalOverflow = VerticalWrapMode.Truncate;
-            text.raycastTarget = false;
-            return text;
+            return NeonUIKit.CreateText(parent, objectName, content, fontSize, style, color, alignment);
         }
 
         internal static void Stretch(RectTransform rect)

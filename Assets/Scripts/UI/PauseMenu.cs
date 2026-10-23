@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 using UnityEngine.UI;
 using Vanguard.Graphics;
 
@@ -70,7 +71,7 @@ namespace Vanguard.UI
         private static void SetLabel(Button button, string text)
         {
             if (button == null) return;
-            Text label = button.GetComponentInChildren<Text>();
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
             if (label != null) label.text = text;
         }
     }

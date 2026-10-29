@@ -65,7 +65,18 @@ namespace Vanguard.Graphics
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
         {
-            Tier = (GraphicsTier)Mathf.Clamp(PlayerPrefs.GetInt(TierKey, (int)GraphicsTier.High), 0, Presets.Length - 1);
+            if (!PlayerPrefs.HasKey(TierKey))
+            {
+                // Lần chạy đầu: tự chọn preset theo phần cứng, lưu lại để người chơi vẫn đổi được trong menu
+                Tier = DetectTier();
+                PlayerPrefs.SetInt(TierKey, (int)Tier);
+                PlayerPrefs.Save();
+                Debug.Log($"[Graphics] Lần chạy đầu: tự chọn {Tier} ({DescribeHardware()})");
+            }
+            else
+            {
+                Tier = (GraphicsTier)Mathf.Clamp(PlayerPrefs.GetInt(TierKey, (int)GraphicsTier.High), 0, Presets.Length - 1);
+            }
             PostProcessing = PlayerPrefs.GetInt(PostFxKey, 1) == 1;
             VSync = PlayerPrefs.GetInt(VSyncKey, 0) == 1;
 
@@ -73,6 +84,48 @@ namespace Vanguard.Graphics
             Application.quitting += RestoreAsset;
 
             ApplyAll();
+        }
+
+        /// <summary>Chọn tier theo phần cứng: VRAM, RAM, số nhân CPU, GPU tích hợp, mức shader.</summary>
+        public static GraphicsTier DetectTier()
+        {
+            if (SystemInfo.graphicsShaderLevel < 45) return GraphicsTier.Low;
+
+            string gpu = SystemInfo.graphicsDeviceName.ToLowerInvariant();
+            int vram = SystemInfo.graphicsMemorySize;   // MB (máy bộ nhớ hợp nhất: gần bằng RAM)
+            int ram = SystemInfo.systemMemorySize;      // MB
+            int cores = SystemInfo.processorCount;
+
+            // Apple Silicon: GPU mạnh, phân theo RAM
+            if (gpu.Contains("apple"))
+            {
+                return ram >= 16000 ? GraphicsTier.High : GraphicsTier.Medium;
+            }
+
+            bool integrated = (gpu.Contains("intel") && !gpu.Contains("arc")) || gpu.Contains("uhd") || gpu.Contains("iris")
+                              || gpu.Contains("radeon graphics") || gpu.Contains("vega 3") || gpu.Contains("vega 8");
+
+            int score = 0;
+            if (vram >= 6000) score += 2; else if (vram >= 3500) score += 1; else if (vram < 2000) score -= 1;
+            if (cores >= 8) score += 1; else if (cores < 4) score -= 1;
+            if (ram >= 16000) score += 1; else if (ram < 8000) score -= 1;
+            if (integrated) score -= 2;
+
+            if (score >= 3) return GraphicsTier.High;
+            if (score >= 1) return GraphicsTier.Medium;
+            return GraphicsTier.Low;
+        }
+
+        private static string DescribeHardware()
+        {
+            return $"{SystemInfo.graphicsDeviceName}, VRAM {SystemInfo.graphicsMemorySize} MB, RAM {SystemInfo.systemMemorySize} MB, {SystemInfo.processorCount} luồng CPU";
+        }
+
+        /// <summary>Xoá lựa chọn đã lưu để lần chạy sau tự dò lại phần cứng.</summary>
+        public static void ResetToAuto()
+        {
+            PlayerPrefs.DeleteKey(TierKey);
+            PlayerPrefs.Save();
         }
 
         public static void SetTier(GraphicsTier tier)

@@ -13,7 +13,7 @@ namespace Vanguard.Graphics
     [DisallowMultipleComponent]
     public sealed class PerfStatsOverlay : MonoBehaviour
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEBUG
         private const float RefreshInterval = 0.5f;
         private const int FrameHistory = 600;
 
@@ -50,12 +50,7 @@ namespace Vanguard.Graphics
 #else
             drawCalls.LastValue;
 #endif
-        private long BatchCount =>
-#if UNITY_EDITOR
-            UnityEditor.UnityStats.batches;
-#else
-            batches.LastValue;
-#endif
+        private long BatchCount => batches.LastValue;
 
         private void OnEnable()
         {

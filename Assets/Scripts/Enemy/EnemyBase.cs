@@ -405,7 +405,8 @@ namespace Vanguard.Enemy
 
         public virtual void ApplyKnockback(Vector3 dir, float force, float duration)
         {
-            if (force <= 0f || duration <= 0f) return;
+            // Quái đã bị thu hồi về Pool trong cùng frame (vd. Husk nổ dây chuyền) thì bỏ qua, tránh StartCoroutine trên object inactive
+            if (!isActiveAndEnabled || force <= 0f || duration <= 0f) return;
 
             // Triệt tiêu hoàn toàn dir.y = 0f, chuẩn hóa dir
             dir.y = 0f;

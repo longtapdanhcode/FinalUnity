@@ -1,4 +1,6 @@
 using System.Collections;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +23,37 @@ namespace Vanguard.Graphics
 
         private readonly float[] frames = new float[MaxFrames];
         private Coroutine running;
+        private readonly StringBuilder report = new StringBuilder();
+
+        public static QualityBenchmark Instance { get; private set; }
+        public bool IsRunning => running != null;
+
+        private void Awake() { Instance = this; }
+
+        private void OnDestroy() { if (Instance == this) Instance = null; }
+
+        /// <summary>Bắt đầu benchmark (dùng cho F5 và cho SmokeTestRunner).</summary>
+        public void Begin()
+        {
+            if (running == null) running = StartCoroutine(Run());
+        }
+
+        private void Log(string line)
+        {
+            report.AppendLine(line);
+            Debug.Log(line);
+        }
+
+        private void WriteReport()
+        {
+            try
+            {
+                string dir = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs");
+                Directory.CreateDirectory(dir);
+                File.WriteAllText(Path.Combine(dir, "bench_report.txt"), report.ToString());
+            }
+            catch (System.Exception ex) { Debug.LogWarning("[Bench] Không ghi được file: " + ex.Message); }
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -34,17 +67,15 @@ namespace Vanguard.Graphics
         private void Update()
         {
             Keyboard kb = Keyboard.current;
-            if (kb != null && kb.f5Key.wasPressedThisFrame && running == null)
-            {
-                running = StartCoroutine(Run());
-            }
+            if (kb != null && kb.f5Key.wasPressedThisFrame) Begin();
         }
 
         private IEnumerator Run()
         {
             GraphicsTier original = GraphicsSettingsService.Tier;
             float mediumLow1Pct = 0f;
-            Debug.Log("[Bench] Bắt đầu: 3 tier x (2s khởi động + 8s đo). Giữ nguyên cảnh, đừng mở menu.");
+            report.Clear();
+            Log("[Bench] Bắt đầu: 3 tier x (2s khởi động + 8s đo). Giữ nguyên cảnh, đừng mở menu.");
 
             for (int t = 0; t < 3; t++)
             {
@@ -68,7 +99,8 @@ namespace Vanguard.Graphics
 
             GraphicsSettingsService.SetTier(original);
             string verdict = mediumLow1Pct >= TargetFps ? "PASS" : "FAIL";
-            Debug.Log($"[Bench] Kết luận: Medium 1% low = {mediumLow1Pct:F0} FPS (mục tiêu {TargetFps:F0}) -> {verdict}. Đã khôi phục tier {original}.");
+            Log($"[Bench] Kết luận: Medium 1% low = {mediumLow1Pct:F0} FPS (mục tiêu {TargetFps:F0}) -> {verdict}. Đã khôi phục tier {original}.");
+            WriteReport();
             running = null;
         }
 
@@ -82,7 +114,7 @@ namespace Vanguard.Graphics
             avgFps = 1000f / Mathf.Max(0.01f, avgMs);
             lowFps = 1000f / Mathf.Max(0.01f, p99Ms);
 
-            Debug.Log($"[Bench] {tier,-6} | {n} frame | avg {avgMs:F2} ms ({avgFps:F0} FPS) | p99 {p99Ms:F2} ms ({lowFps:F0} FPS 1% low) | max {frames[n - 1] * 1000f:F1} ms | {Screen.width}x{Screen.height}");
+            Log($"[Bench] {tier,-6} | {n} frame | avg {avgMs:F2} ms ({avgFps:F0} FPS) | p99 {p99Ms:F2} ms ({lowFps:F0} FPS 1% low) | max {frames[n - 1] * 1000f:F1} ms | {Screen.width}x{Screen.height}");
         }
 #endif
     }

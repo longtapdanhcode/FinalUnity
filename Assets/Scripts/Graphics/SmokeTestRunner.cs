@@ -44,6 +44,12 @@ namespace Vanguard.Graphics
         private readonly List<string> errorSamples = new List<string>();
         private readonly HashSet<string> errorKeys = new HashSet<string>();
 
+        public const string AutoKey = "Vanguard.AutoTest";
+        private const int BenchmarkWave = 9;
+        private const float BenchmarkDelay = 6f;
+
+        private bool autoMode;
+        private bool benchmarkStarted;
         private bool active;
         private PlayerHealth player;
         private int errorCount;
@@ -65,7 +71,23 @@ namespace Vanguard.Graphics
             if (FindAnyObjectByType<SmokeTestRunner>() != null) return;
             var go = new GameObject("SmokeTestRunner") { hideFlags = HideFlags.DontSave };
             DontDestroyOnLoad(go);
-            go.AddComponent<SmokeTestRunner>();
+            SmokeTestRunner runner = go.AddComponent<SmokeTestRunner>();
+#if UNITY_EDITOR
+            // Chạy tự động từ menu Vanguard/Test/Run Full Auto Test: cờ chỉ có hiệu lực một lần
+            if (UnityEditor.EditorPrefs.GetBool(AutoKey, false))
+            {
+                UnityEditor.EditorPrefs.SetBool(AutoKey, false);
+                runner.autoMode = true;
+                Application.runInBackground = true;
+                runner.StartCoroutine(runner.AutoBegin());
+            }
+#endif
+        }
+
+        private System.Collections.IEnumerator AutoBegin()
+        {
+            yield return new WaitForSecondsRealtime(2f);
+            Begin();
         }
 
         private void Update()
@@ -99,6 +121,7 @@ namespace Vanguard.Graphics
             errorKeys.Clear();
             errorCount = 0;
             finished = false;
+            benchmarkStarted = false;
             currentWave = 0;
             originalTier = GraphicsSettingsService.Tier;
 
@@ -128,6 +151,9 @@ namespace Vanguard.Graphics
             if (player != null) player.OnPlayerDeath -= OnPlayerDeath;
             GraphicsSettingsService.SetTier(originalTier);
             WriteReport(reason);
+#if UNITY_EDITOR
+            if (autoMode) UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
 
         private void OnDisable()
@@ -182,6 +208,17 @@ namespace Vanguard.Graphics
             if (waves == null || !waves.IsWaveActive || currentWave == 0) return;
 
             // Bỏ qua wave sau khi đã giao chiến đủ lâu (thời gian thực, không phụ thuộc timeScale)
+            // Benchmark 3 tier ở wave đông nhất (chỉ khi chạy tự động)
+            QualityBenchmark bench = QualityBenchmark.Instance;
+            if (bench != null && bench.IsRunning) { waveStartTime += Time.unscaledDeltaTime; return; }
+            if (autoMode && !benchmarkStarted && currentWave == BenchmarkWave && bench != null
+                && Time.unscaledTime - waveStartTime >= BenchmarkDelay)
+            {
+                benchmarkStarted = true;
+                bench.Begin();
+                return;
+            }
+
             if (Time.unscaledTime - waveStartTime >= waveLimit) waves.SkipCurrentWave();
         }
 

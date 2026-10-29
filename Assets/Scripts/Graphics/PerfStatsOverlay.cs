@@ -43,6 +43,20 @@ namespace Vanguard.Graphics
             go.AddComponent<PerfStatsOverlay>();
         }
 
+        // Editor: UnityStats (cùng nguồn với cửa sổ Stats, đáng tin hơn ProfilerRecorder cho Draw/Batches). Build: ProfilerRecorder.
+        private long DrawCalls =>
+#if UNITY_EDITOR
+            UnityEditor.UnityStats.drawCalls;
+#else
+            drawCalls.LastValue;
+#endif
+        private long BatchCount =>
+#if UNITY_EDITOR
+            UnityEditor.UnityStats.batches;
+#else
+            batches.LastValue;
+#endif
+
         private void OnEnable()
         {
             drawCalls = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
@@ -96,8 +110,8 @@ namespace Vanguard.Graphics
             sb.Clear();
             sb.Append("FPS ").Append((1000f / Mathf.Max(0.01f, avg)).ToString("F0"))
               .Append("  avg ").Append(avg.ToString("F1")).Append(" ms  max ").Append(max.ToString("F1")).Append(" ms\n");
-            sb.Append("Draw ").Append(drawCalls.LastValue)
-              .Append("  Batches ").Append(batches.LastValue)
+            sb.Append("Draw ").Append(DrawCalls)
+              .Append("  Batches ").Append(BatchCount)
               .Append("  SetPass ").Append(setPass.LastValue)
               .Append("  Tris ").Append((triangles.LastValue / 1000).ToString()).Append("k\n");
             sb.Append("GC alloc/frame ").Append(gcAlloc.LastValue).Append(" (").Append(gcAllocBytes.LastValue).Append(" B)");
@@ -116,7 +130,7 @@ namespace Vanguard.Graphics
             float p99 = sortBuffer[Mathf.Min(frameCount - 1, Mathf.CeilToInt(frameCount * 0.99f) - 1)];
 
             Debug.Log($"[Perf] {frameCount} frame | avg {avg:F2} ms ({1000f / avg:F0} FPS) | min {sortBuffer[0]:F2} | p99 {p99:F2} ms ({1000f / p99:F0} FPS 1% low) | max {sortBuffer[frameCount - 1]:F2} " +
-                      $"| Draw {drawCalls.LastValue} | Batches {batches.LastValue} | SetPass {setPass.LastValue} | Tris {triangles.LastValue} | GC {gcAlloc.LastValue} alloc/{gcAllocBytes.LastValue} B " +
+                      $"| Draw {DrawCalls} | Batches {BatchCount} | SetPass {setPass.LastValue} | Tris {triangles.LastValue} | GC {gcAlloc.LastValue} alloc/{gcAllocBytes.LastValue} B " +
                       $"| Tier {GraphicsSettingsService.Tier} | {Screen.width}x{Screen.height}");
         }
 
@@ -128,7 +142,10 @@ namespace Vanguard.Graphics
                 style = new GUIStyle(GUI.skin.label) { fontSize = 14, richText = false };
                 style.normal.textColor = new Color(0.4f, 1f, 0.9f, 1f);
             }
-            GUI.Label(new Rect(10f, 10f, 520f, 70f), text, style);
+            float h = 70f;
+            var rect = new Rect(10f, Screen.height - h - 10f, 520f, h);
+            GUI.Box(rect, GUIContent.none);
+            GUI.Label(rect, text, style);
         }
 #endif
     }

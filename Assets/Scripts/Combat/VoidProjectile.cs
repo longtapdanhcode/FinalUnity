@@ -74,6 +74,13 @@ namespace Vanguard.Combat
             }
         }
 
+        private void OnEnable()
+        {
+            // Đạn được lấy lại từ pool: reset trạng thái
+            timer = 0f;
+            hasHit = false;
+        }
+
         private void Update()
         {
             // Bay thẳng theo trục transform.forward với vận tốc speed
@@ -83,7 +90,7 @@ namespace Vanguard.Combat
             timer += Time.deltaTime;
             if (timer >= lifeTime)
             {
-                Destroy(gameObject);
+                Vanguard.Pooling.PrefabPool.Release(gameObject);
             }
         }
 
@@ -110,7 +117,7 @@ namespace Vanguard.Combat
                 hasHit = true;
                 damageable.TakeDamage(damage, transform.position, transform.forward);
                 Debug.Log($"[VoidProjectile] Đạn trúng {other.name}! Gây {damage} DMG.");
-                Destroy(gameObject);
+                Vanguard.Pooling.PrefabPool.Release(gameObject);
                 return;
             }
 
@@ -119,7 +126,7 @@ namespace Vanguard.Combat
             if (other.gameObject.layer == defaultLayer || (hitLayers.value != 0 && (hitLayers.value & (1 << other.gameObject.layer)) != 0))
             {
                 hasHit = true;
-                Destroy(gameObject);
+                Vanguard.Pooling.PrefabPool.Release(gameObject);
             }
         }
 

@@ -92,7 +92,7 @@ namespace Vanguard.Cards
                 }
             }
 
-            Destroy(gameObject);
+            Vanguard.Pooling.PrefabPool.Release(gameObject);
         }
 
         private void Explode(Vector3 center, float damage, float stunDuration, float radius,

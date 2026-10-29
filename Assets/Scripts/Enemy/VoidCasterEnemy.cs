@@ -252,7 +252,7 @@ namespace Vanguard.Enemy
             GameObject projObj;
             if (projectilePrefab != null)
             {
-                projObj = Instantiate(projectilePrefab, spawnPos, spawnRot);
+                projObj = Vanguard.Pooling.PrefabPool.Get(projectilePrefab, spawnPos, spawnRot);
             }
             else
             {

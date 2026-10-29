@@ -58,7 +58,7 @@ namespace Vanguard.Cards
                 groundPoint = hit.point;
             }
 
-            GameObject meteorObj = Instantiate(meteorPrefab, groundPoint, Quaternion.identity);
+            GameObject meteorObj = Vanguard.Pooling.PrefabPool.Get(meteorPrefab, groundPoint, Quaternion.identity);
             if (meteorObj.TryGetComponent(out MeteorImpact impact))
             {
                 impact.Launch(groundPoint, damage, stunDuration, explosionRadius, fallDelay, knockbackForce, knockbackDuration);
@@ -66,7 +66,7 @@ namespace Vanguard.Cards
             else
             {
                 Debug.LogWarning("[MeteorFall] meteorPrefab thiếu component MeteorImpact!", meteorObj);
-                Destroy(meteorObj);
+                Vanguard.Pooling.PrefabPool.Release(meteorObj);
             }
         }
     }

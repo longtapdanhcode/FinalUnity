@@ -26,6 +26,7 @@ namespace Vanguard.Graphics
         }
 
         private Pool[] pools;
+        private Camera cam;
 
         private void Awake()
         {
@@ -100,8 +101,18 @@ namespace Vanguard.Graphics
             Pool pool = pools[(int)id];
             if (pool == null) return;
 
-            int index = pool.next;
-            pool.next = (pool.next + 1) % pool.effects.Length;
+            // Bỏ qua VFX quá xa camera (giới hạn theo quality tier)
+            if (cam == null) cam = Camera.main;
+            if (cam != null)
+            {
+                float maxDist = GraphicsSettingsService.MaxVfxDistance;
+                if ((position - cam.transform.position).sqrMagnitude > maxDist * maxDist) return;
+            }
+
+            // Ngân sách VFX theo tier: chỉ xoay vòng trong phần đầu của pool -> giới hạn số hiệu ứng chạy đồng thời
+            int usable = Mathf.Clamp(Mathf.CeilToInt(pool.effects.Length * GraphicsSettingsService.VfxBudget), 1, pool.effects.Length);
+            int index = pool.next % usable;
+            pool.next = (index + 1) % usable;
 
             VisualEffect ve = pool.effects[index];
             ve.transform.SetPositionAndRotation(position, rotation);

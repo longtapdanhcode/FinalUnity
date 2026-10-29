@@ -29,13 +29,17 @@ namespace Vanguard.Graphics
             public int maxAdditionalLights;
             public bool bloomQuarter;
             public int bloomIterations;
+            public float lodBias;
+            public float lodDistanceScale;
+            public float vfxBudget;
+            public float maxVfxDistance;
         }
 
         private static readonly TierPreset[] Presets =
         {
-            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false, shadowCascades = 1, shadowResolution = 1024, maxAdditionalLights = 0, bloomQuarter = true, bloomIterations = 4 },
-            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false, shadowCascades = 2, shadowResolution = 2048, maxAdditionalLights = 2, bloomQuarter = true, bloomIterations = 5 },
-            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true, shadowCascades = 4, shadowResolution = 2048, maxAdditionalLights = 4, bloomQuarter = false, bloomIterations = 6 },
+            new TierPreset { shadowDistance = 20f, renderScale = 0.8f, msaa = 1, hqBloom = false, shadowCascades = 1, shadowResolution = 1024, maxAdditionalLights = 0, bloomQuarter = true, bloomIterations = 4, lodBias = 0.7f, lodDistanceScale = 0.6f, vfxBudget = 0.4f, maxVfxDistance = 30f },
+            new TierPreset { shadowDistance = 30f, renderScale = 1.0f, msaa = 1, hqBloom = false, shadowCascades = 2, shadowResolution = 2048, maxAdditionalLights = 2, bloomQuarter = true, bloomIterations = 5, lodBias = 1.0f, lodDistanceScale = 0.85f, vfxBudget = 0.7f, maxVfxDistance = 50f },
+            new TierPreset { shadowDistance = 40f, renderScale = 1.0f, msaa = 4, hqBloom = true, shadowCascades = 4, shadowResolution = 2048, maxAdditionalLights = 4, bloomQuarter = false, bloomIterations = 6, lodBias = 1.5f, lodDistanceScale = 1.2f, vfxBudget = 1.0f, maxVfxDistance = 90f },
         };
 
         private static bool hasBackup;
@@ -49,6 +53,12 @@ namespace Vanguard.Graphics
         public static GraphicsTier Tier { get; private set; } = GraphicsTier.High;
         public static bool PostProcessing { get; private set; } = true;
         public static bool VSync { get; private set; }
+
+        /// <summary>Hệ số số hạt (0-1) áp lên ParticleSystem và số VFX Graph hoạt động đồng thời.</summary>
+        public static float VfxBudget => Presets[(int)Tier].vfxBudget;
+        /// <summary>VFX xa camera hơn mức này sẽ không được phát.</summary>
+        public static float MaxVfxDistance => Presets[(int)Tier].maxVfxDistance;
+        public static float LodDistanceScale => Presets[(int)Tier].lodDistanceScale;
 
         public static event Action Changed;
 
@@ -113,6 +123,7 @@ namespace Vanguard.Graphics
             }
 
             QualitySettings.vSyncCount = VSync ? 1 : 0;
+            QualitySettings.lodBias = preset.lodBias;
 
             NeonPostFX fx = NeonPostFX.Instance;
             if (fx != null)

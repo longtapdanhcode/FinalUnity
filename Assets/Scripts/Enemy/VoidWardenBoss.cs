@@ -404,7 +404,7 @@ namespace Vanguard.Enemy
                     float radius = arenaRadius * Mathf.Sqrt(Random.value);
                     Vector3 point = arenaCenter + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
 
-                    GameObject meteorObj = Instantiate(meteorImpactPrefab, point, Quaternion.identity);
+                    GameObject meteorObj = Vanguard.Pooling.PrefabPool.Get(meteorImpactPrefab, point, Quaternion.identity);
                     if (meteorObj.TryGetComponent(out MeteorImpact impact))
                     {
                         impact.Launch(point, meteorDamage, 0f, meteorRadius, meteorWarningTime,
@@ -412,7 +412,7 @@ namespace Vanguard.Enemy
                     }
                     else
                     {
-                        Destroy(meteorObj);
+                        Vanguard.Pooling.PrefabPool.Release(meteorObj);
                     }
 
                     yield return interval;

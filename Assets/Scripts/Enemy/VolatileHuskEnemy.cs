@@ -304,7 +304,7 @@ namespace Vanguard.Enemy
         {
             if (explosionVFXPrefab != null)
             {
-                Instantiate(explosionVFXPrefab, center, Quaternion.identity);
+                Vanguard.Pooling.PrefabPool.Get(explosionVFXPrefab, center, Quaternion.identity, 2f);
             }
             else
             {

@@ -116,6 +116,9 @@ namespace Vanguard.Graphics
                 return;
             }
 
+            // Chỉ cho test: nhiều Husk nổ dây chuyền trong cùng frame (50 DMG/lần) có thể hạ Player dù đã hồi máu
+            player.IncreaseMaxHealth(100000f, true);
+
             records.Clear();
             errorSamples.Clear();
             errorKeys.Clear();

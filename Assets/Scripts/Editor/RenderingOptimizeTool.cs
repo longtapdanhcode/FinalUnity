@@ -155,7 +155,7 @@ namespace Vanguard.EditorTools
                     case ShaderPropertyType.Range: sb.Append(n).Append(m.GetFloat(n)); break;
                     case ShaderPropertyType.Texture:
                         Texture t = m.GetTexture(n);
-                        sb.Append(n).Append(t != null ? t.GetInstanceID() : 0);
+                        sb.Append(n).Append(t != null ? AssetDatabase.GetAssetPath(t) + t.name : string.Empty);
                         break;
                 }
             }

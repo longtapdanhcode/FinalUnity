@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8818019123957440011}
   - component: {fileID: 2889747208334779647}
   - component: {fileID: 6363609855445217983}
+  - component: {fileID: 3495658419321084997}
   m_Layer: 6
   m_Name: Crawler
   m_TagString: Untagged
@@ -117,7 +118,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyAnimationDriver
   model: {fileID: 9154675622850056493}
   attackLock: 0.9
+  castLock: 1.5
   hitLock: 0.3
+  minHitInterval: 0
+--- !u!114 &3495658419321084997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271158504935646861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a781a25524a6b8e87762afb81624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyLOD
+  nearDistance: 25
+  farDistance: 45
+  checkInterval: 0.3
 --- !u!1001 &6335805171785264390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -187,9 +205,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 09ee8378833034ce5958851f37769ebf, type: 2}
     - target: {fileID: 6374709604153893705, guid: 996008ba85893448385a4741f5534394, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6374709604153893705, guid: 996008ba85893448385a4741f5534394, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3dd2958416ca3482c94b455d8c8526cf, type: 2}
+    - target: {fileID: 6860641434701783778, guid: 996008ba85893448385a4741f5534394, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6860641434701783778, guid: 996008ba85893448385a4741f5534394, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

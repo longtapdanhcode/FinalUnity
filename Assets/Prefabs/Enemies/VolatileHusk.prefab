@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7174856014352003962}
   - component: {fileID: 5121039273334536722}
   - component: {fileID: 3411727433129055604}
+  - component: {fileID: 9082216036027109326}
   m_Layer: 6
   m_Name: VolatileHusk
   m_TagString: Untagged
@@ -119,7 +120,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyAnimationDriver
   model: {fileID: 6887240116518978226}
   attackLock: 0.9
+  castLock: 1.5
   hitLock: 0.3
+  minHitInterval: 0
+--- !u!114 &9082216036027109326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8013814526291593959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a781a25524a6b8e87762afb81624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyLOD
+  nearDistance: 25
+  farDistance: 45
+  checkInterval: 0.3
 --- !u!1001 &5331316210234181692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -178,6 +196,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4468000557298650176, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}
+      propertyPath: m_SkinnedMotionVectors
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4468000557298650176, guid: df7e5c3d762a240aabfe322073fa188b, type: 3}

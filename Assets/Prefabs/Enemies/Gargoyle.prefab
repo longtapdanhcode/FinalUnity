@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 6400517931264669348}
   - component: {fileID: 7616847065048025167}
   - component: {fileID: 4867870448048988678}
+  - component: {fileID: 2140872831267164177}
   m_Layer: 6
   m_Name: Gargoyle
   m_TagString: Untagged
@@ -224,6 +225,21 @@ MonoBehaviour:
   castLock: 1.5
   hitLock: 0.3
   minHitInterval: 0.8
+--- !u!114 &2140872831267164177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4114163241710078445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a781a25524a6b8e87762afb81624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyLOD
+  nearDistance: 25
+  farDistance: 45
+  checkInterval: 0.3
 --- !u!1 &4956051620565052406
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +681,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 528779a2d01534f96bdfa2f82b5c72ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8466698465027105032, guid: 528779a2d01534f96bdfa2f82b5c72ba, type: 3}
+      propertyPath: m_SkinnedMotionVectors
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8466698465027105032, guid: 528779a2d01534f96bdfa2f82b5c72ba, type: 3}

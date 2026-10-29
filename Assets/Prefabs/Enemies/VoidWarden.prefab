@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 5450323515642297152}
   - component: {fileID: 102516381080991908}
   - component: {fileID: 5349090969170233206}
+  - component: {fileID: 7167202999518938432}
   m_Layer: 6
   m_Name: VoidWarden
   m_TagString: Untagged
@@ -255,6 +256,21 @@ MonoBehaviour:
   castLock: 2.2
   hitLock: 0.3
   minHitInterval: 0.8
+--- !u!114 &7167202999518938432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2205080189475927353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a781a25524a6b8e87762afb81624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyLOD
+  nearDistance: 25
+  farDistance: 45
+  checkInterval: 0.3
 --- !u!1 &2320492705790876565
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +812,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 5f2a99f5e67a7457bb61decf79a51b33, type: 2}
+    - target: {fileID: 7312207170140720799, guid: 9a3bf365330ca468088b3ac7973b8901, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7312207170140720799, guid: 9a3bf365330ca468088b3ac7973b8901, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

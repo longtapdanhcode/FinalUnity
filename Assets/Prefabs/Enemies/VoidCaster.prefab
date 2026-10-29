@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 5348868675746215927}
   - component: {fileID: 8404636643246153977}
   - component: {fileID: 5688880110416497135}
+  - component: {fileID: 6331373456972533884}
   m_Layer: 6
   m_Name: VoidCaster
   m_TagString: Untagged
@@ -149,7 +150,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyAnimationDriver
   model: {fileID: 1443920693305046655}
   attackLock: 0.9
+  castLock: 1.5
   hitLock: 0.3
+  minHitInterval: 0
+--- !u!114 &6331373456972533884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708713258948826971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a781a25524a6b8e87762afb81624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Vanguard.Graphics.EnemyLOD
+  nearDistance: 25
+  farDistance: 45
+  checkInterval: 0.3
 --- !u!1001 &5732810610782340289
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,6 +236,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 7bb7a4be1b92542fdbc6cdf648d3ec7e, type: 2}
+    - target: {fileID: 6420742162798960526, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6420742162798960526, guid: 14394bdda74bc438a9785c79a043c12d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
